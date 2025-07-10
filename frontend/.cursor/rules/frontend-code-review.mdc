@@ -1,0 +1,72 @@
+---
+description: Comprehensive checklist and best practices for reviewing frontend code (Next.js, React, TypeScript, etc.). Ensures code quality, maintainability, and adherence to project standards. Agent-requestable.
+globs:
+alwaysApply: false
+---
+
+# Frontend Code Review Guidelines
+
+## Review Process
+
+- All code must be reviewed by at least one other team member (or AI) before merging.
+- Use pull requests for all changes.
+- Reviewer must check off the Bug-Prevention & Quality Checklist from .cursorrules.
+
+## What to Check For
+
+- Code clarity, readability, and maintainability
+- Correctness and adherence to requirements
+- Consistent use of TypeScript types
+- Proper use of React/Next.js patterns
+- State management best practices (Zustand, TanStack Query, etc.)
+- UI consistency and accessibility (a11y)
+- Security (XSS, CSRF, etc.)
+- Performance (avoid unnecessary re-renders, optimize bundle size)
+- Test coverage and meaningful test cases
+- No linting or formatting errors
+
+## Best Practices
+
+- Leave constructive, actionable feedback
+- Ask clarifying questions if requirements are unclear
+- Suggest improvements, but respect author's intent
+- Approve only when all checklist items and comments are resolved
+
+## Additional Review Criteria (Updated 2025-01-09)
+
+### Responsive Design
+
+- [ ] Component tested on both mobile and desktop breakpoints
+- [ ] Uses mobile-first approach with Tailwind responsive utilities
+- [ ] Conditional rendering implemented correctly for different screen sizes
+- [ ] No fixed widths except for intentional sidebars
+
+### TypeScript & Validation
+
+- [ ] All function parameters have explicit types (especially forms and server actions)
+- [ ] Zod + React Hook Form used for all user-facing forms
+- [ ] Props and function parameters marked as `readonly` where appropriate
+- [ ] No reliance on implicit Zod inference for complex objects
+
+### SonarQube Compliance
+
+- [ ] Uses `??` instead of `||` for default values
+- [ ] No deep nesting (max 3 levels) in JSX or logic
+- [ ] No nested ternary operators (use if/else or helper functions)
+- [ ] No unused variables or parameters (prefix with `_` if needed)
+- [ ] Complex logic extracted into helper functions
+
+### Error Handling & Accessibility
+
+- [ ] All error messages are user-friendly and don't expose internals
+- [ ] Immediate feedback provided for user actions (loading states, success/error)
+- [ ] Semantic HTML used throughout
+- [ ] ARIA labels present on all interactive elements
+- [ ] Keyboard navigation tested and working
+
+### Performance & Animation
+
+- [ ] Components memoized appropriately (React.memo, useMemo, useCallback)
+- [ ] Framer Motion used for all UI transitions
+- [ ] Animations are fast (2-8ms for typing effects) and don't block input
+- [ ] No unnecessary re-renders

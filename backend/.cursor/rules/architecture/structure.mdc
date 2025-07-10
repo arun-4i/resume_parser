@@ -1,0 +1,40 @@
+# Project Structure, File Organization, and Naming
+
+This file defines the project structure, file organization, and naming conventions for backend development. For related standards, see other modular rule files referenced in .cursorrules.
+
+## Directory Structure
+
+```
+src/
+├── config/
+├── controllers/
+├── services/
+├── repositories/
+├── models/
+├── middlewares/
+├── utils/
+├── types/
+├── validators/
+├── app.ts
+└── server.ts
+```
+
+## File Naming Conventions
+
+- Use camelCase for file names: `userController.ts`, `authService.ts`
+- Use PascalCase for class names and interfaces
+- Use absolute imports with TypeScript path aliases (e.g., @/services, @/controllers)
+
+## Best Practices
+
+- Group related files by resource (e.g., userController.ts, userService.ts, userRepository.ts)
+- Keep files small and focused
+- Place shared utilities in `utils/`
+- Place all validators in `validators/`
+- Place all configuration in `config/`
+- Reference [rules/architecture/patterns.mdc] for architecture patterns
+  description:
+  globs:
+  alwaysApply: false
+
+---

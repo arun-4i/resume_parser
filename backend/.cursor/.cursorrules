@@ -1,0 +1,151 @@
+# IMPORTANT: For all new backend development or refactoring tasks,
+
+# IMPORTANT: Use Powershell commands only in the terminal not Command prompt
+
+# always reference [rules/backend-dev.mdc] for coding standards,
+
+# required packages, and architectural patterns. This file is the
+
+# single source of truth for backend best practices.
+
+# Cursor Rules Index for backend_boilerplate
+
+# This file is the main entry point for all backend rules and workflow.
+
+#
+
+# WORKFLOW:
+
+# - For every new feature or major change request, the AI must first perform a **Requirements Clarification** step (see [rules/workflow.mdc]).
+
+# - After clarification, create a plan/checklist as a Markdown file in tasks/YYYY-MM-DD/.
+
+# - All plans must include a 'Retrospective & Feedback' section (see [rules/workflow.mdc]).
+
+# - Reference the appropriate modular rule file for each backend concern.
+
+#
+
+# MODULAR RULES STRUCTURE:
+
+# All backend rules are now organized by concern for maintainability and scalability. Each file below contains detailed standards, examples, and best practices for its area. Update or add new files as the codebase evolves.
+
+# [rules/workflow.mdc] - Workflow, planning, and feedback process
+
+# [rules/backend-dev.mdc] - Generic overview of backend development
+
+# [rules/backend-initial.mdc] - Project initialization blueprint
+
+# [rules/architecture/patterns.mdc] - Repository, Service, Controller patterns
+
+# [rules/architecture/structure.mdc] - Project structure, file organization, naming
+
+# [rules/architecture/dependencies.mdc] - Import patterns, TypeScript config
+
+# [rules/security/encryption.mdc] - AES+RSA, key management
+
+# [rules/security/authentication.mdc] - JWT, RBAC, rate limiting
+
+# [rules/security/validation.mdc] - Input sanitization, Zod schemas
+
+# [rules/development/error-handling.mdc] - Error patterns, middleware
+
+# [rules/development/logging.mdc] - Winston, audit logging, contexts
+
+# [rules/development/swagger.mdc] - OpenAPI, documentation standards
+
+# [rules/development/testing.mdc] - Test patterns, coverage requirements
+
+# [rules/database/models.mdc] - Sequelize patterns, relationships
+
+# [rules/database/migrations.mdc] - Migration standards, seeding
+
+# [rules/database/transactions.mdc] - Connection pooling, transactions
+
+# [rules/deployment/environment.mdc] - Config management, .env structure
+
+# [rules/deployment/performance.mdc] - Caching, optimization
+
+# [rules/deployment/monitoring.mdc] - Health checks, metrics
+
+#
+
+# For any new rule, create a new file in the appropriate subfolder and add a reference here.
+
+#
+
+# For detailed standards, see the referenced modular rule files above.
+
+[rules/workflow.mdc]
+[rules/backend-dev.mdc]
+[rules/backend-initial.mdc]
+[rules/architecture/patterns.mdc]
+[rules/architecture/structure.mdc]
+[rules/architecture/dependencies.mdc]
+[rules/security/encryption.mdc]
+[rules/security/authentication.mdc]
+[rules/security/validation.mdc]
+[rules/development/error-handling.mdc]
+[rules/development/logging.mdc]
+[rules/development/swagger.mdc]
+[rules/development/testing.mdc]
+[rules/database/models.mdc]
+[rules/database/migrations.mdc]
+[rules/database/transactions.mdc]
+[rules/deployment/environment.mdc]
+[rules/deployment/performance.mdc]
+[rules/deployment/monitoring.mdc]
+
+# Add new rules or task plan files below as needed:
+
+# [tasks/YYYY-MM-DD/your-feature-plan.md]
+
+# Lessons Learned and Updated Rules for Backend Migrations
+
+# 1. All request validation must be performed in the controller layer, not in the routes layer. The controller should throw an error immediately if validation fails. Route files should not include validation middleware and should follow the applicationRouter pattern.
+
+# 2. Always obtain the Sequelize instance via DatabaseConnection.getInstance() in all models. Never import 'sequelize' directly. This ensures singleton connection and proper configuration.
+
+# 3. Controller methods must be synchronous Express handlers (not async/await). Use .then/.catch for service calls, or wrap with a helper if needed, to ensure correct Express handler types.
+
+# 4. Route files must only wire up controller methods, with no validation or business logic, and use named exports (not default). Follow the applicationRouter export style.
+
+# 5. All endpoints must be defined in a central constants file (e.g., end-points.ts) and referenced in routers for consistency and maintainability.
+
+# 6. Strictly follow the migration plan/checklist and .cursorrules/backend-dev.mdc for every new feature or migration. Do not proceed to the next step until the current checklist item is fully complete and reviewed.
+
+# 7. Update .cursorrules immediately if a new best practice or error is discovered, before proceeding with further migrations.
+
+# 8. Run lint/type checks after each major step to catch issues early.
+
+# 9. Always use the application route/controller/repository/service/validator as a reference for new resources.
+
+# 10. Review and tick off each checklist item before moving to the next step.
+
+# 11. All TypeScript path alias imports must NOT use a slash after the @ symbol. Use e.g. '@utils/logger', not '@/utils/logger'. This applies to all alias imports throughout the codebase.
+
+# Swagger/OpenAPI and Import/Logging Rules (2025-07-07)
+
+1. Always use the correct TypeScript path aliases as defined in tsconfig.json for all imports. For Swagger/OpenAPI config and registry, use:
+   - @config/swagger
+   - @utils/swaggerRegistry
+     Never use '@/config/swagger' or '@/utils/swaggerRegistry'.
+
+2. For Swagger/OpenAPI and API access logging, always use 'api' as the logger context (never 'audit'). Example:
+   logger.info("api", "Swagger OpenAPI JSON accessed", { ... })
+
+# Project Rules
+
+# 1. Use TypeScript path aliases as defined in tsconfig.json (e.g., @/services, @/models; @ maps to src/).
+
+# 2. All logging must use the project logger with context (e.g., context: "api" for Swagger/API logs).
+
+# 3. Swagger/OpenAPI docs must use Zod schemas as the single source of truth, with auto-discovery for routes and OpenAPI integration.
+
+# 4. All controllers must export route configs (method, path, handler, schemas, summary, tags, security, version).
+
+# 5. Error handling must follow project patterns and use structured error responses.
+
+# 6. Code must comply with SonarQube, ESLint, and project security standards.
+
+# 7. No feedback/retrospective process is required in plans or tasks.

@@ -1,0 +1,39 @@
+# Monitoring, Health Checks, and Metrics
+
+This file defines monitoring, health check, and metrics standards for backend development. For related deployment standards, see other files in the deployment folder.
+
+## Health Checks
+
+- Implement /health endpoint for service status
+- Check DB connectivity, external dependencies
+- Example:
+
+```ts
+app.get("/health", async (req, res) => {
+  // check DB, cache, etc.
+  res.json({ status: "ok" });
+});
+```
+
+## Metrics
+
+- Expose metrics endpoint (e.g., /metrics) for Prometheus, Grafana
+- Track request counts, error rates, latency
+- Example:
+
+```ts
+import promClient from "prom-client";
+const collectDefaultMetrics = promClient.collectDefaultMetrics;
+collectDefaultMetrics();
+```
+
+## Best Practices
+
+- Use monitoring tools (Prometheus, Grafana, Datadog)
+- Set up alerts for critical failures
+- Reference [rules/deployment/performance.mdc] for performance monitoring
+  description:
+  globs:
+  alwaysApply: false
+
+---

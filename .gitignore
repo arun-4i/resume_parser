@@ -1,0 +1,63 @@
+# Node.js / Front-End (React, Angular, etc.) / Common
+node_modules/
+dist/
+build/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+coverage/
+*.tgz
+.env
+.vscode/
+.idea/
+.DS_Store
+package-lock.json
+package.json.lock
+
+# Back-End (Express, Node, etc.)
+*.env
+*.log
+logs/
+pids/
+*.pid
+*.seed
+*.bak
+*.swp
+
+# Database files (if any, for example with SQLite)
+*.sqlite
+*.db
+*.sql
+
+# Temporary files
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/
+
+# MacOS files
+.DS_Store
+
+# Linux swap files
+*.swp
+
+# Docker
+docker-compose.override.yml
+Dockerfile*
+
+# Coverage files from testing
+coverage/
+
+# Build artifacts
+build/
+dist/
+tmp/

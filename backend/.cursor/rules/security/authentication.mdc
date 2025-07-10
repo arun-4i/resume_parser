@@ -1,0 +1,52 @@
+# Authentication, RBAC, and Rate Limiting
+
+This file defines authentication, role-based access control (RBAC), and rate limiting standards for backend development. For related security standards, see other files in the security folder.
+
+## JWT Authentication
+
+- Use JWTs for stateless authentication
+- Store secret in environment variable
+- Set short expiration (e.g., 15-30 min) and use refresh tokens
+- Validate JWT on every request (middleware)
+- Example (Node.js):
+
+```ts
+import jwt from "jsonwebtoken";
+const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
+  expiresIn: "15m",
+});
+```
+
+## RBAC (Role-Based Access Control)
+
+- Define roles (e.g., admin, user, guest)
+- Assign permissions to roles
+- Check user role/permissions in middleware or service layer
+- Example:
+
+```ts
+if (!user.roles.includes("admin")) throw new ForbiddenError();
+```
+
+## Rate Limiting
+
+- Apply rate limiting middleware to all endpoints
+- Use libraries like express-rate-limit
+- Configure limits per route/user/IP as needed
+- Example:
+
+```ts
+import rateLimit from "express-rate-limit";
+const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
+app.use(limiter);
+```
+
+## Compliance
+
+- Follow OWASP recommendations for auth and session management
+- Reference [rules/security/encryption.mdc] for encryption
+  description:
+  globs:
+  alwaysApply: false
+
+---

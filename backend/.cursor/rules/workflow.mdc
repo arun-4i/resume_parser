@@ -1,0 +1,59 @@
+# Backend Workflow, Planning, and Feedback Process
+
+This file defines the workflow for all backend development and refactoring tasks. For technical standards, see the modular rule files referenced in .cursorrules.
+
+## 1. Requirements Clarification
+
+- Before starting any feature or refactor, clarify requirements with the requester (user or team).
+- Use the following template to gather all necessary information:
+
+### Requirements Clarification Template
+
+1. **Feature Overview**: What is the goal? What problem does this solve?
+2. **API Specification**: What endpoints, methods, or UI components are needed? What are the expected inputs/outputs?
+3. **Validation Requirements**: What are the rules for each field or parameter?
+4. **Business Logic Rules**: Are there any constraints or special cases?
+5. **Error Handling**: What are the expected error scenarios and responses?
+6. **Security & Authorization**: Who can access this? What roles/permissions are required?
+7. **Logging & Auditing**: What events or changes should be logged?
+8. **Performance/Scalability**: Any special requirements?
+9. **Additional Context**: Anything else relevant?
+
+## 2. Planning & Task Checklist
+
+- After clarification, create a detailed, tickable plan as a Markdown file in tasks/YYYY-MM-DD/.
+- Each plan must:
+  - Be detailed, in-depth, and non-repetitive
+  - Use a checklist format for tasks (tickable)
+  - Be clear and articulate for easy review
+  - Follow the pattern: if a task is done, tick it and move to the next
+  - Reference the appropriate modular rule files for technical standards
+
+## 3. Retrospective & Feedback
+
+- Every plan must include a 'Retrospective & Feedback' section, to be filled out after implementation is complete.
+- The AI should fill out this section, the user will go through and suggest changes accordingly.
+
+### Retrospective & Feedback Template
+
+- What errors or blockers were encountered?
+- Was the feature request clear? If not, what was missing?
+- How could the plan/checklist be improved for next time?
+- What should the AI do differently in future planning?
+- Any other notes for improvement?
+
+## 4. Continuous Improvement
+
+- Review the last 1-2 feedback sections inside (feedback/)before starting a new plan.
+- Update modular rule files as new best practices or errors are discovered.
+- For major/ongoing tasks, reference the plan file in .cursorrules.
+
+## References
+
+- Main entry point: [.cursorrules]
+- Technical standards: see modular rule files referenced in .cursorrules
+  description:
+  globs:
+  alwaysApply: false
+
+---

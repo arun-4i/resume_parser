@@ -1,0 +1,37 @@
+# Swagger/OpenAPI Documentation Standards
+
+This file defines Swagger/OpenAPI documentation standards for backend development. For related development standards, see other files in the development folder.
+
+## Zod Schema Integration
+
+- Use Zod schemas as the single source of truth for request/response validation
+- Auto-generate OpenAPI docs from Zod schemas
+- Example:
+
+```ts
+// Use zod-to-openapi or similar tool
+import { z } from 'zod';
+const userSchema = z.object({ ... });
+// Register schema for OpenAPI
+```
+
+## Auto-Discovery
+
+- Automatically discover and register all routes and schemas for documentation
+- Keep docs up to date with code changes
+
+## Documentation Best Practices
+
+- Include request/response examples
+- Document all endpoints, parameters, and error responses
+- Use tags, summaries, and versioning
+
+## Compliance
+
+- Ensure docs are accessible at /api-docs
+- Reference [rules/security/validation.mdc] for schema standards
+  description:
+  globs:
+  alwaysApply: false
+
+---

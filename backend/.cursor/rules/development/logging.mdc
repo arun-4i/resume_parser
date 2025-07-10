@@ -1,0 +1,46 @@
+# Logging and Audit Logging Standards
+
+This file defines logging and audit logging standards for backend development. For related development standards, see other files in the development folder.
+
+## Winston Logger
+
+- Use Winston for all application logging
+- Configure log levels for dev/prod
+- Use structured JSON logs
+- Example:
+
+```ts
+import winston from "winston";
+const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.json(),
+  transports: [new winston.transports.Console()],
+});
+logger.info("User created", { userId });
+```
+
+## Audit Logging
+
+- Log all CRUD operations to a separate audit log/table
+- Include user context and timestamps
+- Retain audit logs for at least 1 year
+- Example:
+
+```ts
+auditLogger.log("user.update", { userId, changes, performedBy });
+```
+
+## Log Contexts
+
+- Use context strings (e.g., 'api', 'audit') for all logs
+- Never log sensitive data (passwords, secrets)
+
+## Compliance
+
+- Follow industry standards for log retention and security
+- Reference [rules/development/error-handling.mdc] for error logging
+  description:
+  globs:
+  alwaysApply: false
+
+---

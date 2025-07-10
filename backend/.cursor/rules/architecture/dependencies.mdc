@@ -1,0 +1,33 @@
+# Import Patterns, TypeScript Config, and Dependency Management
+
+This file defines import patterns, TypeScript configuration, and dependency management standards for backend development. For related standards, see other modular rule files referenced in .cursorrules.
+
+## Import Patterns
+
+- Use TypeScript path aliases as defined in tsconfig.json (e.g., @/services, @/models; @ = src/)
+- Avoid relative imports (e.g., ../../services/userService) in favor of path aliases
+- Example:
+
+```ts
+import { UserService } from "@/services/userService";
+```
+
+## TypeScript Configuration
+
+- Use strict mode (`strict: true` in tsconfig.json)
+- Target ES2020 or newer
+- Enable all strict family options (strictNullChecks, strictFunctionTypes, etc.)
+- Keep tsconfig.json up to date with project structure
+
+## Dependency Management
+
+- Use npm or yarn for package management
+- Keep dependencies minimal and up to date
+- Regularly audit dependencies for security
+- Use specific versions for core dependencies (Express, Sequelize, etc.)
+- Reference [rules/deployment/environment.mdc] for environment config
+  description:
+  globs:
+  alwaysApply: false
+
+---

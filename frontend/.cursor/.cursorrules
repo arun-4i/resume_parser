@@ -1,0 +1,140 @@
+# .cursor/.cursorrules — Frontend Rules Router & Workflow
+
+# Main entry for all frontend rules, standards, and plans. Start here for any new feature, refactor, or process change.
+
+# Always use the Context7 MCP tool to access documentation. Only provide the latest, up-to-date, non-deprecated code and APIs.
+
+# The AI can and should use Context7 to access official documentation and get information about Next.js or any other technology as needed for planning, implementation, or clarification.
+
+# ---
+
+# WORKFLOW (Frontend)
+
+1. **Requirements Clarification:** AI must always start by creating a requirements clarification section (using the template below) and get user confirmation or answers.
+2. **Planning:** After clarification, AI must generate a detailed, tickable plan file in `.cursor/tasks/YYYY-MM-DD/` (today's date, in YYYY-MM-DD format) before any implementation begins. **This applies to all major changes, including process/rules changes.**
+3. **Approval:** User must review and approve the plan file (add "Plan Approved By:" in the plan) before any code or implementation work starts. **The plan file is the single source of truth for the change until merged.**
+4. **Implementation:** Only after approval, complete tasks, using the Bug-Prevention Checklist in each plan.
+5. **Code Review & Testing:** All code must be reviewed and pass tests before completion. See code review and testing rules.
+6. **Linting & Formatting:** All code must pass linting/formatting before merge. See linting rules.
+7. **Retrospective & Feedback:** Fill out the feedback section in the plan after implementation.
+8. **Continuous Improvement:** Review last feedback before new plans; update rules/processes as needed.
+
+# ---
+
+# RULES INDEX — When to Use Each Rule
+
+- [rules/frontend-dev.mdc]: Main standards for architecture, packages, and best practices. Use for all development.
+- [rules/frontend-code-review.mdc]: Code review checklist and best practices. Use before merging any code.
+- [rules/frontend-linting.mdc]: Linting/formatting requirements. Use before submitting or merging code.
+- [tasks/example-plan.md]: Plan template. Use for all new features or major changes.
+
+# ---
+
+# REQUIREMENTS CLARIFICATION TEMPLATE
+
+- Feature Overview
+- Component/API Specification
+- Validation Requirements
+- Business Logic Rules
+- Error Handling
+- Security & Authorization
+- Logging & Auditing
+- Performance/Scalability
+- Additional Context
+
+# ---
+
+# BUG-PREVENTION & QUALITY CHECKLIST (add to each plan)
+
+- [ ] Accessibility (a11y) checked
+- [ ] Responsive on all breakpoints
+- [ ] State edge cases handled
+- [ ] Error boundaries in place
+- [ ] Security best practices followed
+- [ ] Performance reviewed
+- [ ] Linting/formatting passed
+- [ ] Tests written and passing
+
+# ---
+
+# FEEDBACK SECTION (add to each plan)
+
+- What errors or blockers were encountered?
+- Was the feature request clear?
+- How could the plan/checklist or rules be improved?
+- Did any part of the rules or workflow cause confusion?
+- What action(s) will be taken to address feedback?
+- What should the AI do differently next time?
+- Any other notes?
+
+# ---
+
+# DOCUMENTATION & README GENERATION
+
+- README or documentation changes should only be included in the plan and implementation if explicitly requested in requirements or referenced standards.
+
+# ---
+
+# COMPONENT PLACEMENT & RULES CHANGES (2025-07-01)
+
+- All new custom components (e.g., Navbar) must be placed in 'src/components/'.
+- The 'ui' directory is reserved only for shadcn components.
+- Any rule/process change must:
+  1. Be documented in a plan file in `.cursor/tasks/YYYY-MM-DD/`.
+  2. Be reflected in the relevant rules file (e.g., frontend-dev.mdc).
+  3. Be referenced in this file's workflow and rules index.
+
+# ---
+
+# CLIENT COMPONENT DIRECTIVE (2025-07-01)
+
+- All React components that use client-side hooks (e.g., useState, useEffect, useTheme) must include the 'use client' directive at the top of the file.
+- This applies to all new and existing components.
+- Any file that uses client-side hooks (such as useSidebar, useState, useEffect, useTheme, etc.) must include the 'use client' directive at the top. This applies to all new and existing components/layouts.
+
+# ---
+
+# RESPONSIVE & MOBILE-FIRST REQUIREMENTS (2025-01-09)
+
+- All UIs must be fully responsive and tested on both mobile and desktop breakpoints.
+- Use mobile-first design approach with Tailwind's responsive utilities (`lg:`, `md:`, etc.).
+- Conditional rendering required for mobile vs desktop layouts when they differ significantly.
+- Test all components on actual devices, not just browser dev tools.
+
+# ---
+
+# TYPESCRIPT & VALIDATION STANDARDS (2025-01-09)
+
+- Use explicit TypeScript types for all function parameters, especially form data and validation schemas.
+- Avoid relying solely on Zod inference for complex objects (e.g., FileList, nested objects).
+- All user-facing forms must use Zod + React Hook Form for validation.
+- Server actions must have comprehensive error handling and type safety.
+
+# ---
+
+# SONARQUBE COMPLIANCE REQUIREMENTS (2025-01-09)
+
+- Use `??` (nullish coalescing) instead of `||` for default values.
+- Mark all props and function parameters as `readonly` where possible.
+- Avoid deep nesting in JSX and logic (max 3 levels); prefer flat, readable structures.
+- Do not use nested ternary operators; use if/else statements or helper functions instead.
+- Avoid unused variables and parameters (prefix with `_` if needed).
+- Extract complex logic into helper functions to improve readability.
+
+# ---
+
+# ACCESSIBILITY & ERROR HANDLING (2025-01-09)
+
+- Accessibility is mandatory: use semantic HTML, ARIA labels, and ensure keyboard navigation.
+- All error messages must be user-friendly and never expose internal details.
+- Test all edge cases: empty, invalid, and large inputs.
+- Provide immediate feedback for user actions (loading states, success/error messages).
+
+# ---
+
+# ANIMATION & PERFORMANCE (2025-01-09)
+
+- Use Framer Motion for all UI transitions and animations.
+- Animations must be fast (2-8ms per character for typing effects), smooth, and not block user input.
+- Memoize components where appropriate to avoid unnecessary re-renders.
+- Use React.memo, useMemo, and useCallback strategically for performance optimization.

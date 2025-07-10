@@ -1,0 +1,48 @@
+# Migration and Seeding Standards
+
+This file defines migration and seeding standards for backend development. For related database standards, see other files in the database folder.
+
+## Migrations
+
+- Use Sequelize CLI for migrations
+- Name migration files with timestamp and description (e.g., 20250707-create-users.js)
+- Example:
+
+```js
+module.exports = {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('users', { ... });
+  },
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable('users');
+  },
+};
+```
+
+## Seeding
+
+- Use seeders for initial/test data
+- Name seeder files with timestamp and description
+- Example:
+
+```js
+module.exports = {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.bulkInsert('users', [ ... ]);
+  },
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.bulkDelete('users', null, {});
+  },
+};
+```
+
+## Best Practices
+
+- Keep migrations and seeders in migrations/ and seeders/ directories
+- Test migrations in a staging environment before production
+- Reference [rules/database/models.mdc] for model standards
+  description:
+  globs:
+  alwaysApply: false
+
+---

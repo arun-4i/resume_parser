@@ -1,0 +1,19 @@
+---
+description: Linting and formatting requirements for all frontend code. Covers tools, configuration, and enforcement for code consistency. Agent-requestable.
+globs: 
+alwaysApply: false
+---
+# Frontend Linting & Formatting Standards
+## Tools
+- **ESLint:** For JavaScript/TypeScript linting
+- **Prettier:** For code formatting
+- **Stylelint:** For CSS/Tailwind (optional, if using custom CSS)
+
+## Configuration
+- Use the project's shared ESLint and Prettier configs
+- Extend with recommended plugins for React, TypeScript, Next.js, Tailwind, etc.
+- Enforce rules for code style, unused variables, imports, and accessibility
+
+## Enforcement
+- All code must pass linting and formatting checks before merge
+- Fix all warnings and errors before submitting code for review

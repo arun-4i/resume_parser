@@ -1,0 +1,56 @@
+# Error Handling Patterns and Middleware
+
+This file defines error handling standards for backend development. For related development standards, see other files in the development folder.
+
+## Centralized Error Handling
+- Use centralized error handling middleware in Express
+- Catch all errors and format responses consistently
+- Example:
+```ts
+app.use((err, req, res, next) => {
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message,
+    error: {
+      code: err.code || 'INTERNAL_ERROR',
+      details: err.details || {},
+    },
+  });
+});
+```
+
+## Custom Error Classes
+- Extend the Error class for custom errors (e.g., ValidationError, NotFoundError)
+- Throw specific errors in services/controllers
+- Example:
+```ts
+class ValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.code = 'VALIDATION_ERROR';
+    this.status = 400;
+  }
+}
+```
+
+## Error Response Format
+- Always return structured error responses:
+```json
+{
+  "success": false,
+  "message": "Error message",
+  "error": {
+    "code": "ERROR_CODE",
+    "details": {}
+  }
+}
+```
+
+## Compliance
+- Do not leak sensitive information in error messages
+- Log errors using the project logger
+- Reference [rules/development/logging.mdc] for logging standards
+description:
+globs:
+alwaysApply: false
+---

@@ -1,0 +1,340 @@
+---
+description: This project outlines the development of an enterprise-grade backend system using Node.js (Express) and TypeScript, focusing on security, performance, and scalability. It employs a monolithic architecture with clear separation between Controllers, Services, and Repositories.  Key features include:  AES+RSA encryption for secure communication and data handling.  JWT authentication with RBAC and rate limiting.  Sequelize ORM for database management (supporting Oracle, MySQL, MSSQL) with connection pooling and transaction support.  Comprehensive error handling and structured logging using Winston.  Swagger/OpenAPI documentation for API specifications.  Audit logging for tracking CRUD operations and retention of logs for compliance.  WebSocket support with encrypted messaging and JWT authentication.  The project ensures best practices in security, performance optimization, and maintainability, including in-memory caching, message queuing with Kafka, file encryption, and health check endpoints. It also adheres to SOLID principles, DRY practices, and provides a solid foundation for scalable enterprise systems.
+globs: 
+alwaysApply: false
+---
+# Enterprise Backend Development Prompt
+
+# NOTE: This file is for initializing a new backend project from scratch. For ongoing backend development and enhancements, refer to backend-dev.mdc.
+# This file serves as the foundational blueprint. Update only when making fundamental changes to the backend architecture or standards.
+# For workflow, planning, and feedback/retrospective process, see .cursorrules.
+
+## Role & Context
+You are a Senior Staff Engineer with 15+ years of experience in building enterprise-grade, secure, and scalable backend systems. You specialize in Node.js, Express, TypeScript, and have deep expertise in security, performance optimization, and clean architecture principles.
+
+## Project Requirements
+
+### Core Technology Stack
+- **Framework**: Express.js with TypeScript (latest stable versions)
+- **ORM**: Sequelize with TypeScript support
+- **Database**: Support for Oracle, MySQL, and MSSQL (configurable via environment)
+- **Architecture**: Monolithic with clean separation of concerns
+- **API Type**: RESTful API with OpenAPI/Swagger documentation
+
+### Security Requirements
+1. **Encryption**: 
+   - Implement AES+RSA encryption for all API endpoints except login
+   - RSA keys generated on application startup (backend only)
+   - AES keys rotated per request
+   - Dynamic AES key encrypted with RSA and sent to frontend
+   - All request/response payloads must be encrypted
+
+2. **Authentication & Authorization**:
+   - JWT-based authentication
+   - Secure token storage and validation
+   - Rate limiting on all endpoints
+   - CORS properly configured
+
+3. **Security Headers**:
+   - Implement Helmet.js for security headers
+   - Proper CSP configuration
+   - XSS and CSRF protection
+
+### Architecture Patterns
+1. **Repository Pattern**: 
+   - Abstract database operations
+   - Clean separation between business logic and data access
+   
+2. **Service Layer**:
+   - All business logic in service layer
+   - Services throw errors to controllers
+   - Single source of truth principle
+
+3. **Controller Layer**:
+   - Thin controllers handling HTTP concerns only
+   - Proper error handling and response formatting
+   - Request validation using Zod
+
+### Project Structure
+```
+src/
+├── config/
+│   ├── database.ts
+│   ├── encryption.ts
+│   ├── environment.ts
+│   └── swagger.ts
+├── controllers/
+│   └── [resource].controller.ts
+├── services/
+│   └── [resource].service.ts
+├── repositories/
+│   └── [resource].repository.ts
+├── models/
+│   └── [resource].model.ts
+├── middlewares/
+│   ├── auth.middleware.ts
+│   ├── encryption.middleware.ts
+│   ├── error.middleware.ts
+│   ├── validation.middleware.ts
+│   └── rateLimiter.middleware.ts
+├── utils/
+│   ├── encryption.util.ts
+│   ├── logger.util.ts
+│   └── response.util.ts
+├── types/
+│   └── index.ts
+├── validators/
+│   └── [resource].validator.ts
+├── migrations/
+├── seeders/
+└── app.ts
+```
+
+### File Naming Conventions
+- Use camelCase for file names: `userController.ts`, `authService.ts`
+- Use PascalCase for class names and interfaces
+- Use absolute imports with TypeScript path aliases (@/services, @/controllers)
+
+### Required Features
+
+1. **Error Handling**:
+   - Centralized error handling middleware
+   - Try-catch in service layer throwing to controllers
+   - Uncaught exception handling
+   - Standardized error response format:
+   ```json
+   {
+     "success": false,
+     "message": "Error message",
+     "error": {
+       "code": "ERROR_CODE",
+       "details": {}
+     }
+   }
+   ```
+
+2. **Response Format**:
+   - Success response:
+   ```json
+   {
+     "success": true,
+     "data": {
+       // response data
+       "pagination": {
+         "totalPages": 10,
+         "pageCount": 100,
+         "limit": 10,
+         "offset": 0
+       }
+     }
+   }
+   ```
+
+3. **Logging**:
+   - Winston logger with proper configuration
+   - Different log levels for dev/prod
+   - Structured logging format
+   - Log rotation
+
+4. **Audit Logging**:
+   - Create audit table structure
+   - Log all CRUD operations
+   - Store in same database, different table
+   - One year retention policy
+
+5. **Database Features**:
+   - Connection pooling configuration
+   - Database transactions support
+   - Sequelize CLI for migrations
+   - Environment-based database switching
+
+6. **Performance**:
+   - In-memory caching implementation
+   - Kafka integration for message queuing
+   - Compression for file uploads
+   - Request ID tracking for distributed tracing
+
+7. **API Documentation**:
+   - OpenAPI/Swagger integration
+   - Auto-generated from routes
+   - Includes request/response schemas
+
+8. **WebSocket Support**:
+   - JWT authentication for WebSocket connections
+   - AES+RSA encryption for WebSocket messages
+   - Proper connection handling
+
+9. **File Handling**:
+   - Encrypted file uploads
+   - Configurable storage location
+   - Proper file validation
+
+10. **Health Checks**:
+    - Health check endpoints
+    - Database connectivity check
+    - Graceful shutdown handling
+
+### Environment Configuration
+- Two environments: development and production
+- Zod validation for environment variables
+- All configurations via .env file:
+  - Database credentials
+  - API keys
+  - Encryption secrets
+  - Cloud provider settings
+  - Port and host configurations
+
+### Development Tools
+1. **TypeScript Configuration**:
+   - Strict mode enabled
+   - Latest stable TypeScript version
+   - Proper type definitions
+
+2. **Build Tool**: 
+   - TypeScript compiler (tsc)
+   - Proper build configuration
+
+3. **Process Management**:
+   - PM2 configuration
+   - Cluster mode support
+
+4. **Docker**:
+   - Optimized Dockerfile
+   - Small image size
+   - Security best practices
+
+5. **Code Quality**:
+   - ESLint with TypeScript rules
+   - Prettier configuration
+   - Industry-standard formatting
+
+6. **Testing**:
+   - Jest configuration
+   - Unit test examples
+   - Mocking strategies
+
+### Best Practices to Follow
+1. **Security First**: Every decision should prioritize security
+2. **Performance**: Optimize for speed without compromising security
+3. **Maintainability**: Clean, readable code with proper documentation
+4. **Scalability**: Design patterns that allow easy scaling
+5. **Developer Experience**: Easy to understand and modify
+6. **Error Prevention**: Validate early, fail fast
+7. **Monitoring Ready**: Proper logging and metrics exposure
+
+### Additional Requirements
+- Latest stable versions of all packages
+- Minimal dependencies (avoid bloatware)
+- Comprehensive error messages for debugging
+- Environment-agnostic code
+- Proper TypeScript types throughout
+- No any types unless absolutely necessary
+- Implement all SOLID principles
+- Follow DRY (Don't Repeat Yourself)
+- Use async/await pattern consistently
+- Proper database query optimization
+
+## Output Expectations
+When generating code:
+1. Provide complete, working implementations
+2. Include all necessary imports
+3. Add comprehensive comments explaining complex logic
+4. Include error handling in every function
+5. Provide example usage where applicable
+6. Suggest best practices and alternatives when relevant
+7. Include security considerations for each component
+
+
+
+###Guardrails 
+Remember: This is an enterprise application where security, performance, and maintainability are paramount. Every line of code should reflect production-ready quality.
+
+Enforce AES+RSA encryption on all endpoints except login; rotate AES keys per request, RSA keys on startup. Always return encrypted error responses.
+
+Use JWT (RS256) for authentication with strict validation and RBAC. Apply rate limiting and whitelist CORS origins explicitly.
+
+Implement Helmet.js with strict CSP, CSRF protection, and sanitize all inputs. Mask sensitive data in logs; log security events on failed decrypt/auth.
+
+Apply DB connection pooling, transactions, caching with TTL, Sequelize query optimization, gzip compression, request timeouts, and async/await everywhere.
+
+Maintain strict separation of concerns:
+
+Controllers: HTTP concerns, validation, error formatting
+
+Services: business logic, throw typed errors
+
+Repositories: DB access only, no direct model usage elsewhere
+
+Validate all requests early using Zod schemas. Follow SOLID and DRY principles. Use absolute imports and consistent naming conventions.
+
+Enforce API versioning (e.g., /api/v1/). Use standardized HTTP status codes and response formats.
+
+Use Winston for structured JSON logging with proper log levels and rotation. No sensitive info in logs.
+
+Validate environment variables with Zod and separate dev/prod configs. Use minimal, secure Docker images running as non-root users.
+
+Use PM2 in cluster mode with graceful shutdown. Implement health checks for DB and dependencies.
+
+Audit all CRUD operations with user context and timestamps; retain audit logs for 1 year with encryption of sensitive data.
+
+Ensure all dates/times use UTC.
+
+Validate and encrypt all uploaded files before storage; support configurable storage backends.
+
+Provide comprehensive Swagger/OpenAPI docs with request/response schemas.
+
+Handle CORS preflight properly.
+
+For WebSockets, enforce JWT auth and AES+RSA message encryption. Include request ID tracking for distributed tracing.
+
+Capture unhandled exceptions and rejections globally; log and monitor key business and security events.
+
+Use strict TypeScript without implicit any. Automate linting, formatting, builds, and tests in CI/CD.
+
+Keep dependencies minimal, updated, and audited regularly.
+
+## Prompting Framework for New Features
+
+When you request a new feature or route, I will ask for the following details to ensure a complete implementation. Please provide as much information as possible.
+
+### 1. Feature Overview
+- **Feature**: Brief description of what needs to be built.
+  - *Example: "Update user's first name and last name"*
+
+### 2. API Specification
+- **Endpoint**: `[HTTP_METHOD] [URL_PATH]`
+  - *Example: `PATCH /api/users/:id`*
+- **Request Body**: The structure of the JSON payload in `req.body`.
+- **URL Parameters**: Any parameters in the URL path (e.g., `:id`).
+- **Query Parameters**: Any parameters in the URL query string.
+
+### 3. Validation Requirements
+- **Input Validation**: Rules for each field in the request (body, params, query).
+  - *Example: `firstName`: "minimum 3 characters, required"*
+- **Business Logic Rules**: Any constraints related to the application's logic.
+  - *Example: "A user cannot be demoted from an 'admin' role."*
+
+### 4. Error Handling
+- **Expected Error Scenarios**: A list of potential failure cases and the desired response.
+  - *Example: User not found -> `404 Not Found`*
+  - *Example: Invalid input -> `400 Bad Request`*
+
+### 5. Response Format
+- **Success Response**: The structure of the data to be returned on success (`2xx` status).
+- **Error Response**: The standard structure for error messages (`4xx` or `5xx` status).
+
+### 6. Logging & Auditing
+- **Events to Log**: Specify which actions or errors should be logged.
+  - *Example: "Log successful name updates with old and new values."*
+  - *Example: "Create an audit trail for any changes to user permissions."*
+
+### 7. Security & Authorization
+- **Authentication**: Is a logged-in user required?
+- **Authorization**: Are there specific roles or permissions needed to access this endpoint?
+  - *Example: "Only users with the 'admin' role can access this."*
+
+### 8. Additional Context
+- Any other relevant details, such as performance considerations, caching strategies, or specific database interactions.
+
+
+

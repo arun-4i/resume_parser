@@ -1,0 +1,38 @@
+# Performance, Caching, and Optimization Standards
+
+This file defines performance, caching, and optimization standards for backend development. For related deployment standards, see other files in the deployment folder.
+
+## Caching
+
+- Use in-memory caching (e.g., NodeCache, Redis) for frequently accessed data
+- Set appropriate TTL (time-to-live) for cache entries
+- Example:
+
+```ts
+import NodeCache from "node-cache";
+const cache = new NodeCache({ stdTTL: 60 });
+cache.set("key", value);
+```
+
+## Optimization
+
+- Use gzip compression for HTTP responses
+- Optimize DB queries (indexes, select only needed fields)
+- Use async/await for non-blocking operations
+- Example:
+
+```ts
+import compression from "compression";
+app.use(compression());
+```
+
+## Best Practices
+
+- Monitor performance with tools like New Relic, Datadog
+- Profile and optimize slow endpoints
+- Reference [rules/deployment/environment.mdc] for config
+  description:
+  globs:
+  alwaysApply: false
+
+---

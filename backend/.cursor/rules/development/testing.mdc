@@ -1,0 +1,45 @@
+# Testing Standards: Unit, Integration, E2E
+
+This file defines testing standards for backend development. For related development standards, see other files in the development folder.
+
+## Unit Testing
+
+- Test all business logic in services and utilities
+- Use Jest or Mocha as the test runner
+- Example:
+
+```ts
+test("should create user", () => {
+  // ...
+});
+```
+
+## Integration Testing
+
+- Test API endpoints and database interactions
+- Use supertest or similar tools
+- Example:
+
+```ts
+import request from "supertest";
+request(app).get("/api/users").expect(200);
+```
+
+## End-to-End (E2E) Testing
+
+- Test full user flows (API, DB, external services)
+- Use tools like Cypress or Playwright
+
+## Coverage
+
+- Aim for >80% code coverage
+- Track coverage with Istanbul/nyc or built-in tools
+
+## Compliance
+
+- Reference [rules/architecture/patterns.mdc] for testable code structure
+  description:
+  globs:
+  alwaysApply: false
+
+---

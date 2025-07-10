@@ -1,0 +1,40 @@
+# Input Validation, Sanitization, and Zod Schemas
+
+This file defines input validation and sanitization standards for backend development. For related security standards, see other files in the security folder.
+
+## Input Validation
+
+- Validate all incoming data (body, params, query) using Zod schemas
+- Reject requests with invalid or missing data
+- Example:
+
+```ts
+import { z } from "zod";
+const userSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+});
+userSchema.parse(req.body);
+```
+
+## Sanitization
+
+- Sanitize all inputs to prevent XSS, SQL injection, and other attacks
+- Use libraries like DOMPurify for HTML, or custom sanitizers for strings
+- Never trust client input
+
+## Zod Schema Usage
+
+- Define schemas in validators/ directory
+- Use schemas for both validation and Swagger/OpenAPI docs
+- Keep schemas DRY and reusable
+
+## Compliance
+
+- Follow OWASP input validation guidelines
+- Reference [rules/security/encryption.mdc] and [rules/security/authentication.mdc] for related standards
+  description:
+  globs:
+  alwaysApply: false
+
+---

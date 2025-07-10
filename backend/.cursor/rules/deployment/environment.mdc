@@ -1,0 +1,43 @@
+# Environment Configuration and .env Structure
+
+This file defines environment configuration and .env structure standards for backend development. For related deployment standards, see other files in the deployment folder.
+
+## .env Structure
+
+- Store all secrets and environment-specific values in .env files
+- Example:
+
+```
+DB_URI=...
+JWT_SECRET=...
+NODE_ENV=production
+PORT=3000
+```
+
+## Config Management
+
+- Use config/ directory for all configuration files
+- Validate environment variables using Zod or similar
+- Example:
+
+```ts
+import { z } from "zod";
+const envSchema = z.object({
+  DB_URI: z.string().url(),
+  JWT_SECRET: z.string().min(32),
+  NODE_ENV: z.enum(["development", "production"]),
+  PORT: z.string().regex(/^\d+$/),
+});
+envSchema.parse(process.env);
+```
+
+## Best Practices
+
+- Never commit .env files to version control
+- Use different .env files for dev, test, prod
+- Reference [rules/deployment/performance.mdc] for performance-related configs
+  description:
+  globs:
+  alwaysApply: false
+
+---

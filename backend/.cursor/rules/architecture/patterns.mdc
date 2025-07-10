@@ -1,0 +1,71 @@
+# Architecture Patterns: Repository, Service, Controller
+
+This file defines the core backend architecture patterns for this project. For related standards, see other modular rule files referenced in .cursorrules.
+
+## Repository Pattern
+
+- Abstracts all database operations
+- No business logic in repositories
+- Expose CRUD and query methods only
+- Example:
+
+```ts
+// userRepository.ts
+export class UserRepository {
+  async findById(id: number) {
+    /* ... */
+  }
+  async create(user: User) {
+    /* ... */
+  }
+}
+```
+
+## Service Layer
+
+- Contains all business logic
+- Calls repositories for data access
+- Throws errors to controllers
+- Example:
+
+```ts
+// userService.ts
+export class UserService {
+  constructor(private repo: UserRepository) {}
+  async updateUser(id: number, data: UpdateUserDto) {
+    // business logic
+    return this.repo.update(id, data);
+  }
+}
+```
+
+## Controller Layer
+
+- Handles HTTP concerns only (req, res, next)
+- Validates requests, formats responses
+- Calls service methods
+- Example:
+
+```ts
+// userController.ts
+export const updateUser = async (req, res, next) => {
+  try {
+    const result = await userService.updateUser(req.params.id, req.body);
+    res.json({ success: true, data: result });
+  } catch (err) {
+    next(err);
+  }
+};
+```
+
+## Best Practices
+
+- Strict separation of concerns
+- Use dependency injection for services/repositories
+- No direct DB/model access in controllers/services (always via repository)
+- Reference [rules/architecture/structure.mdc] for file organization
+  description:
+  globs:
+  alwaysApply: false
+
+---

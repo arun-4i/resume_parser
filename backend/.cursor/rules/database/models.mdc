@@ -1,0 +1,48 @@
+# Sequelize Model Patterns and Relationships
+
+This file defines standards for Sequelize models and relationships in backend development. For related database standards, see other files in the database folder.
+
+## Model Definition
+
+- Define models using Sequelize's Model class and TypeScript
+- Use PascalCase for model class names
+- Example:
+
+```ts
+import { Model, DataTypes } from "sequelize";
+class User extends Model {}
+User.init(
+  {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    email: { type: DataTypes.STRING, allowNull: false, unique: true },
+  },
+  { sequelize, modelName: "User" }
+);
+```
+
+## Relationships
+
+- Define associations in a separate function (e.g., associate())
+- Use hasMany, belongsTo, etc. for relationships
+- Example:
+
+```ts
+User.hasMany(Post);
+Post.belongsTo(User);
+```
+
+## Naming Conventions
+
+- Table names: plural, snake_case (e.g., users, user_profiles)
+- Field names: camelCase in code, snake_case in DB
+
+## Best Practices
+
+- Use migrations for schema changes
+- Keep models in models/ directory
+- Reference [rules/database/migrations.mdc] for migration standards
+  description:
+  globs:
+  alwaysApply: false
+
+---

@@ -1,0 +1,45 @@
+# Encryption Standards: AES+RSA and Key Management
+
+This file defines encryption standards for secure communication and data handling in backend development. For related security standards, see other files in the security folder.
+
+## AES+RSA Encryption
+
+- Use AES for symmetric encryption of payloads
+- Use RSA for encrypting AES keys (hybrid encryption)
+- AES keys should be generated per request/session
+- RSA key pair generated on backend startup; private key never leaves server
+- Example (Node.js):
+
+```ts
+import crypto from "crypto";
+// Generate AES key
+const aesKey = crypto.randomBytes(32); // 256-bit
+// Encrypt data
+const cipher = crypto.createCipheriv("aes-256-cbc", aesKey, iv);
+// Encrypt AES key with RSA public key
+const encryptedKey = crypto.publicEncrypt(rsaPublicKey, aesKey);
+```
+
+## Key Management
+
+- Store RSA private key securely (env variable, secret manager, or file with restricted access)
+- Rotate AES keys frequently (per request/session)
+- Rotate RSA keys periodically (with downtime/maintenance window)
+- Never log or expose private keys
+
+## Secure Communication
+
+- All API payloads (except login) must be encrypted
+- Use HTTPS for all network traffic
+- Validate and sanitize all decrypted data
+
+## Compliance
+
+- Follow industry standards (OWASP, NIST)
+- Document key rotation and encryption processes
+- Reference [rules/security/authentication.mdc] for JWT and RBAC
+  description:
+  globs:
+  alwaysApply: false
+
+---

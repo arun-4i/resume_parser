@@ -1,0 +1,40 @@
+# Backend Development Overview
+
+This file provides a high-level overview of backend development for this project. For detailed standards, see the modular rule files referenced in .cursorrules.
+
+## Purpose
+
+- Guide ongoing backend development and refactoring
+- Reference for best practices and architecture
+- All technical details and standards are now in modular rule files
+
+## Key Principles
+
+- Security, performance, and maintainability are top priorities
+- Follow clean architecture: separation of concerns between controllers, services, repositories
+- Use TypeScript, Express, and Sequelize as core stack
+- All new features and refactors must start with a detailed, tickable plan (see [rules/workflow.mdc])
+- Retrospective & feedback required after implementation (see [rules/workflow.mdc])
+
+## Modular Rules
+
+For all technical standards, see:
+
+- [rules/architecture/patterns.mdc]
+- [rules/architecture/structure.mdc]
+- [rules/architecture/dependencies.mdc]
+- [rules/security/encryption.mdc]
+- [rules/security/authentication.mdc]
+- [rules/security/validation.mdc]
+- [rules/development/error-handling.mdc]
+- [rules/development/logging.mdc]
+- [rules/development/swagger.mdc]
+- [rules/development/testing.mdc]
+- [rules/database/models.mdc]
+- [rules/database/migrations.mdc]
+- [rules/database/transactions.mdc]
+- [rules/deployment/environment.mdc]
+- [rules/deployment/performance.mdc]
+- [rules/deployment/monitoring.mdc]
+
+Update or add new rule files as the codebase evolves.

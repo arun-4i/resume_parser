@@ -1,0 +1,41 @@
+# Connection Pooling and Transaction Management
+
+This file defines connection pooling and transaction management standards for backend development. For related database standards, see other files in the database folder.
+
+## Connection Pooling
+
+- Configure Sequelize connection pool in config/database.ts
+- Example:
+
+```ts
+const sequelize = new Sequelize(DB_URI, {
+  pool: { max: 10, min: 0, acquire: 30000, idle: 10000 },
+});
+```
+
+## Transaction Management
+
+- Use transactions for multi-step DB operations
+- Example:
+
+```ts
+await sequelize.transaction(async (t) => {
+  await User.create({ ... }, { transaction: t });
+  await Profile.create({ ... }, { transaction: t });
+});
+```
+
+## Error Handling
+
+- Roll back transactions on error
+- Log transaction failures
+
+## Best Practices
+
+- Use transactions for all write operations that affect multiple tables
+- Reference [rules/database/models.mdc] for model standards
+  description:
+  globs:
+  alwaysApply: false
+
+---
