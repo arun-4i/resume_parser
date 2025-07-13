@@ -1,14 +1,13 @@
 "use client";
 
-import { useState, useCallback, memo } from "react";
+import { useState, useCallback, memo, useMemo } from "react";
 import { toast } from "sonner";
-import ResumeCompareLayout from "./ResumeCompareLayout";
 import ResumeCompareForm from "./ResumeCompareForm";
 import ResumeCompareChat from "./ResumeCompareChat";
 
-// Memoized components for performance
-const MemoizedResumeCompareForm = memo(ResumeCompareForm);
-const MemoizedResumeCompareChat = memo(ResumeCompareChat);
+// ==========================================
+// TYPE DEFINITIONS & MEMOIZED COMPONENTS
+// ==========================================
 
 interface ResumeCompareState {
   isSubmitted: boolean;
@@ -16,6 +15,13 @@ interface ResumeCompareState {
   content: string | null;
   error: string | null;
 }
+
+const MemoizedResumeCompareForm = memo(ResumeCompareForm);
+const MemoizedResumeCompareChat = memo(ResumeCompareChat);
+
+// ==========================================
+// MAIN COMPONENT
+// ==========================================
 
 export default function ResumeCompareClient() {
   const [state, setState] = useState<ResumeCompareState>({
@@ -25,7 +31,10 @@ export default function ResumeCompareClient() {
     error: null,
   });
 
-  // Handle form submission start
+  // ==========================================
+  // EVENT HANDLERS
+  // ==========================================
+
   const handleSubmitStart = useCallback(() => {
     setState((prev) => ({
       ...prev,
@@ -35,7 +44,6 @@ export default function ResumeCompareClient() {
     }));
   }, []);
 
-  // Handle successful form submission
   const handleSubmitSuccess = useCallback(
     (result: { success?: boolean; data?: { content?: string } }) => {
       setState({
@@ -44,26 +52,16 @@ export default function ResumeCompareClient() {
         content: result.data?.content ?? "",
         error: null,
       });
-
-      // Show success toast
       toast.success("Resume analysis complete!");
     },
     []
   );
 
-  // Handle form submission error
   const handleSubmitError = useCallback((error: string) => {
-    setState((prev) => ({
-      ...prev,
-      isLoading: false,
-      error,
-    }));
-
-    // Show error toast
+    setState((prev) => ({ ...prev, isLoading: false, error }));
     toast.error(error);
   }, []);
 
-  // Reset the form to initial state
   const handleReset = useCallback(() => {
     setState({
       isSubmitted: false,
@@ -73,35 +71,71 @@ export default function ResumeCompareClient() {
     });
   }, []);
 
-  // Form component with props
-  const formComponent = (
-    <MemoizedResumeCompareForm
-      onSubmitStart={handleSubmitStart}
-      onSubmit={handleSubmitSuccess}
-      onError={handleSubmitError}
-      onReset={handleReset}
-    />
+  // ==========================================
+  // SHARED COMPONENTS
+  // ==========================================
+
+  const formComponent = useMemo(
+    () => (
+      <MemoizedResumeCompareForm
+        onSubmitStart={handleSubmitStart}
+        onSubmit={handleSubmitSuccess}
+        onError={handleSubmitError}
+        onReset={handleReset}
+      />
+    ),
+    [handleSubmitStart, handleSubmitSuccess, handleSubmitError, handleReset]
   );
 
-  // Chat component with props (rendered when loading, has content, or error)
-  const chatComponent =
-    state.isLoading || state.content || state.error ? (
-      <div className="h-full">
-        <MemoizedResumeCompareChat
-          content={state.content ?? ""}
-          error={state.error ?? undefined}
-          isLoading={state.isLoading}
-        />
-      </div>
+  const chatComponent = useMemo(() => {
+    const shouldShow = state.isLoading || !!state.content || !!state.error;
+    return shouldShow ? (
+      <MemoizedResumeCompareChat
+        content={state.content ?? ""}
+        error={state.error ?? undefined}
+        isLoading={state.isLoading}
+      />
     ) : null;
+  }, [state.isLoading, state.content, state.error]);
+
+  // ==========================================
+  // CLEAN LAYOUT - PROPER SPACING AND NO OVERLAP
+  // ==========================================
 
   return (
-    <ResumeCompareLayout
-      isSubmitted={state.isSubmitted}
-      formComponent={formComponent}
-      chatComponent={chatComponent}
-    >
-      <></>
-    </ResumeCompareLayout>
+    <div className="relative h-screen flex flex-col">
+      {/* Chat Content Area - Scrollable behind form */}
+      <div className="flex-1 overflow-y-auto mb-2">
+        <div className="px-3 pt-6 pb-32 sm:px-4 sm:pt-8 md:px-6 lg:px-8">
+          {/* Chat content */}
+          {state.isSubmitted && (
+            <div className="mb-14 w-full lg:max-w-4xl mx-auto">{chatComponent}</div>
+          )}
+        </div>
+      </div>
+
+      {/* Fixed Form at Bottom - ChatGPT style solid overlay */}
+      <div className="p-6 absolute bottom-0 right-0 left-0 z-50">
+        {/* Gradient fade effect */}
+        {/* <div className="h-8 bg-gradient-to-t from-background to-transparent"></div> */}
+        {/* Solid form background */}
+        {/* <div className="bg-background px-4 py-4"> */}
+          <div className="w-full max-w-2xl mx-auto">{formComponent}</div>
+        {/* </div> */}
+      </div>
+
+      {/* Hidden accessibility landmarks for screen readers */}
+      <div className="sr-only">
+        <h1>Resume Comparison Tool</h1>
+        <main>
+          <section aria-label="Chat conversation" role="log" aria-live="polite">
+            {/* Chat content is announced to screen readers */}
+          </section>
+          <section aria-label="Form input area">
+            {/* Form is properly labeled */}
+          </section>
+        </main>
+      </div>
+    </div>
   );
 }

@@ -154,3 +154,52 @@ src/
 - Animations must be fast (2-8ms per character for typing effects), smooth, and not block user input
 - Provide visual feedback for all user interactions
 - Ensure animations are accessible and can be disabled if needed
+
+## Enhanced Requirements Clarification Strategy (Updated 2025-01-11)
+
+### Pre-Implementation Questions (MANDATORY for all UI/layout features)
+
+**Before any UI/layout implementation, developers MUST ask these specific questions:**
+
+1. **Layout Positioning**: "Where exactly should each element be positioned? (left/center/right, top/bottom)"
+2. **Responsive Behavior**: "How should this look and behave differently on mobile vs desktop?"
+3. **Visual Integration**: "Should this blend seamlessly with the background or have distinct styling?"
+4. **State Management**: "When should data be cleared vs preserved? What triggers state changes?"
+5. **Animation Preferences**: "What animations are desired vs distracting? What should happen during transitions?"
+6. **Form Structure**: "Should this be a single form or multiple sections? Where should buttons be positioned?"
+7. **Background & Borders**: "Should elements have borders, backgrounds, or blend seamlessly?"
+8. **Z-index & Layering**: "What should appear on top of what? Any overlay requirements?"
+
+### Implementation Validation Checklist
+
+**During implementation, developers MUST verify:**
+
+- [ ] **Mobile/Desktop Consistency**: Test responsive behavior immediately
+- [ ] **Visual Integration**: Verify background blending and border consistency
+- [ ] **State Persistence**: Confirm when data should be preserved vs cleared
+- [ ] **Animation Conflicts**: Check for interfering animations or timing issues
+- [ ] **Z-index Layering**: Ensure proper element stacking on both mobile and desktop
+- [ ] **Form Flow**: Test complete user journey from start to finish
+- [ ] **Edge Cases**: Test with long content, empty states, and error conditions
+
+### Common Debugging Patterns to Avoid
+
+**Pattern 1: Layout Specification Gaps**
+- ❌ Implementing without exact positioning details
+- ✅ Ask for specific layout requirements upfront
+
+**Pattern 2: Responsive Design Conflicts**
+- ❌ Making desktop changes without testing mobile
+- ✅ Test both breakpoints during development
+
+**Pattern 3: Visual Integration Problems**
+- ❌ Adding borders/backgrounds without considering parent context
+- ✅ Verify visual consistency across all components
+
+**Pattern 4: State Management Edge Cases**
+- ❌ Assuming form behavior without confirming persistence requirements
+- ✅ Clarify state management expectations before implementation
+
+**Pattern 5: Animation Timing Conflicts**
+- ❌ Adding animations without considering interactions
+- ✅ Plan animation sequences and test for conflicts

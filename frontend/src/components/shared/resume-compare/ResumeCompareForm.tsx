@@ -1,69 +1,64 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { RotateCcw, Plus, Loader2, Send, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import {
   resumeCompareServerAction,
   type ResumeCompareResult,
 } from "@/app/actions/resume-compare/resume-compare-server-action";
+import React from "react";
 
-// Form validation schema with email field
+// Simplified form validation schema (email removed temporarily)
+type ResumeCompareFormData = {
+  resume: FileList | null;
+  jobDescription: string;
+};
+
 const ResumeCompareFormSchema = z.object({
-  email: z
-    .string()
-    .min(1, "Email is required")
-    .email("Please enter a valid email address"),
   resume: z
-    .instanceof(FileList)
-    .refine(
-      (files: FileList) => files.length > 0,
-      "Please select a resume file"
-    )
-    .refine(
-      (files: FileList) =>
-        [
-          "application/pdf",
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        ].includes(files[0].type),
-      "Only PDF and DOCX files are allowed"
-    )
-    .refine(
-      (files: FileList) => files[0].size <= 10 * 1024 * 1024, // 10MB limit
-      "File size must be less than 10MB"
-    ),
+    .custom<FileList | null>()
+    .refine((files) => {
+      if (typeof window === "undefined") return true;
+      return files && files.length > 0;
+    }, "Please select a resume file")
+    .refine((files) => {
+      if (typeof window === "undefined" || !files || files.length === 0)
+        return true;
+
+      const allowedTypes = [
+        "application/pdf",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ];
+      return allowedTypes.includes(files[0].type);
+    }, "Only PDF and DOCX files are allowed")
+    .refine((files) => {
+      if (typeof window === "undefined" || !files || files.length === 0)
+        return true;
+
+      const maxSize = 10 * 1024 * 1024; // 10MB
+      return files[0].size <= maxSize;
+    }, "File size must be less than 10MB"),
   jobDescription: z
     .string()
     .min(1, "Job description is required")
     .min(10, "Job description must be at least 10 characters")
     .max(5000, "Job description must be less than 5000 characters"),
 });
-
-type ResumeCompareFormData = {
-  email: string;
-  resume: FileList;
-  jobDescription: string;
-};
 
 interface ResumeCompareFormProps {
   onSubmitStart: () => void;
@@ -79,252 +74,258 @@ export default function ResumeCompareForm({
   onReset,
 }: Readonly<ResumeCompareFormProps>) {
   const [isPending, startTransition] = useTransition();
-  const [dragActive, setDragActive] = useState(false);
 
   const form = useForm<ResumeCompareFormData>({
     resolver: zodResolver(ResumeCompareFormSchema),
     defaultValues: {
-      email: "",
+      resume: null,
       jobDescription: "",
     },
+    mode: "onChange", // This enables real-time validation
   });
 
   const handleSubmit = async (data: ResumeCompareFormData) => {
-    onSubmitStart(); // Call this immediately when form starts submitting
+    onSubmitStart();
 
     startTransition(async () => {
-      const formData = new FormData();
-      formData.append("email", data.email);
-      formData.append("resume", data.resume[0]); // Extract the first file
-      formData.append("jobDescription", data.jobDescription);
+      if (!data.resume || data.resume.length === 0) {
+        onError("Please select a resume file");
+        return;
+      }
 
-      const result = await resumeCompareServerAction(formData);
+      try {
+        const formData = new FormData();
+        formData.append("email", "user@example.com"); // Temporary hardcoded email
+        formData.append("resume", data.resume[0]);
+        formData.append("jobDescription", data.jobDescription);
 
-      if (result.success && result.data?.content) {
-        onSubmit(result);
-      } else {
-        onError(result.error ?? "An unexpected error occurred");
+        const result = await resumeCompareServerAction(formData);
+
+        if (result.success && result.data?.content) {
+          form.reset(data);
+          onSubmit(result);
+        } else {
+          onError(result.error ?? "An unexpected error occurred");
+        }
+      } catch (error) {
+        onError(
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred"
+        );
       }
     });
   };
 
-  const handleDrag = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
-    } else if (e.type === "dragleave") {
-      setDragActive(false);
-    }
-  };
+  // Get selected file info for display
+  const selectedFile = form.watch("resume");
+  const fileName =
+    selectedFile && selectedFile.length > 0 ? selectedFile[0].name : null;
+  const fileSize =
+    selectedFile && selectedFile.length > 0
+      ? (selectedFile[0].size / (1024 * 1024)).toFixed(1) + "MB"
+      : null;
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
+  const jobDescription = form.watch("jobDescription");
 
-    if (e.dataTransfer.files?.[0]) {
-      const file = e.dataTransfer.files[0];
-      const fileList = new DataTransfer();
-      fileList.items.add(file);
-      form.setValue("resume", fileList.files);
+  // Check validation requirements directly
+  const isJobDescriptionValid = jobDescription.trim().length >= 10;
+  const isFileValid = selectedFile && selectedFile.length > 0;
+  const { errors } = form.formState;
+
+  const isFormValid =
+    isJobDescriptionValid && isFileValid && Object.keys(errors).length === 0;
+
+  // Clear file validation errors when file is selected
+  React.useEffect(() => {
+    if (selectedFile && selectedFile.length > 0) {
+      form.clearErrors("resume");
     }
-  };
+  }, [selectedFile, form]);
 
   return (
-    <Card className="w-full h-full flex flex-col">
-      <CardHeader className="text-center flex-shrink-0">
-        <div className="flex items-center justify-between">
-          <div className="flex-1" />
-          <CardTitle className="text-2xl font-bold">
-            Resume Comparison
-          </CardTitle>
-          <div className="flex-1 flex justify-end">
-            {onReset && (
+    <div className="w-full">
+      {/* File upload badge - using shadcn Badge component */}
+      {fileName && (
+        <div className="mb-2 flex items-center justify-start">
+          <Badge
+            variant="secondary"
+            className="flex items-center space-x-1.5 pr-1"
+          >
+            <div className="w-1.5 h-1.5 bg-primary rounded-full flex-shrink-0" />
+            <div className="flex items-center space-x-1 min-w-0">
+              <span className="font-medium truncate max-w-[150px]">
+                {fileName}
+              </span>
+              <span className="text-muted-foreground">({fileSize})</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => form.setValue("resume", null)}
+              className="hover:bg-muted rounded-full p-0.5 transition-colors flex-shrink-0 ml-1"
+              title="Remove file"
+              aria-label="Remove uploaded file"
+            >
+              <X className="w-2.5 h-2.5" />
+            </button>
+          </Badge>
+        </div>
+      )}
+
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(handleSubmit)}
+          className="bg-muted border border-border rounded-md"
+        >
+          {/* Hidden file input */}
+          <FormField
+            control={form.control}
+            name="resume"
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            render={({ field: { onChange, value: _value, ...field } }) => (
+              <FormItem className="hidden">
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="file"
+                    accept=".pdf,.docx"
+                    onChange={(e) => {
+                      onChange(e.target.files);
+                      // Clear any previous errors when file is selected
+                      if (e.target.files && e.target.files.length > 0) {
+                        form.clearErrors("resume");
+                      }
+                    }}
+                    id="resume-upload-hidden"
+                    disabled={isPending}
+                    aria-label="Upload resume file"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* First section: Top strip with reset button */}
+          {/* {onReset && (
+            <div className="px-3 py-2 border-b border-border flex justify-end">
               <button
                 type="button"
                 onClick={() => {
                   form.reset({
-                    email: "",
+                    resume: null,
                     jobDescription: "",
                   });
                   onReset();
                 }}
-                className="p-2 hover:bg-muted rounded-lg transition-colors"
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center space-x-1 py-1 px-2 rounded-md border border-border"
                 title="Reset form"
+                aria-label="Reset form to start over"
               >
-                <svg
-                  className="w-4 h-4 text-muted-foreground"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                  />
-                </svg>
+                <RotateCcw className="w-3 h-3" />
+                <span>Reset</span>
               </button>
-            )}
-          </div>
-        </div>
-        <CardDescription>
-          Upload your resume and provide a job description to get personalized
-          feedback
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex-1 flex flex-col">
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleSubmit)}
-            className="space-y-4 flex-1 flex flex-col"
-          >
-            {/* Email Field */}
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email Address</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="email"
-                      placeholder="your.email@example.com"
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            </div>
+          )} */}
 
-            {/* File Upload Field - Made smaller */}
-            <FormField
-              control={form.control}
-              name="resume"
-              render={({ field: { onChange, value, ...field } }) => (
-                <FormItem>
-                  <FormLabel>Resume Upload</FormLabel>
-                  <FormControl>
-                    <button
-                      type="button"
-                      tabIndex={0}
-                      className={`border-2 border-dashed rounded-lg p-4 text-center transition-colors ${
-                        dragActive
-                          ? "border-primary bg-primary/10"
-                          : "border-muted-foreground/25 hover:border-primary/50"
-                      }`}
-                      onDragEnter={handleDrag}
-                      onDragLeave={handleDrag}
-                      onDragOver={handleDrag}
-                      onDrop={handleDrop}
-                      aria-label="Upload resume"
-                    >
-                      <Input
-                        {...field}
-                        type="file"
-                        accept=".pdf,.docx"
-                        onChange={(e) => onChange(e.target.files)}
-                        className="hidden"
-                        id="resume-upload"
-                        disabled={isPending}
-                      />
-                      <Label
-                        htmlFor="resume-upload"
-                        className="cursor-pointer flex flex-col items-center space-y-2"
-                      >
-                        <div className="flex flex-col items-center space-y-1">
-                          <svg
-                            className="w-6 h-6 text-muted-foreground"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                            />
-                          </svg>
-                          <span className="text-sm font-medium">
-                            {value && value.length > 0
-                              ? value[0].name
-                              : "Click to upload or drag and drop"}
-                          </span>
-                          <span className="text-xs text-muted-foreground">
-                            PDF or DOCX (max 10MB)
-                          </span>
-                        </div>
-                      </Label>
-                    </button>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Job Description Field - Takes remaining height */}
+          {/* First section: Scrollable textarea */}
+          <div className="">
             <FormField
               control={form.control}
               name="jobDescription"
               render={({ field }) => (
-                <FormItem className="flex-1 flex flex-col p-2 rounded-md border-2">
-                  <FormLabel>Job Description</FormLabel>
-                  <FormControl className="">
+                <FormItem>
+                  <FormControl>
                     <Textarea
                       {...field}
-                      placeholder="Paste the job description here..."
-                      className="h-[150px] overflow-auto rounded-none scroll-auto border-none"
+                      placeholder="Describe the job requirements..."
+                      className="dark:bg-transparent bg-transparent min-h-[50px] max-h-[120px] border-0 focus-visible:ring-0 resize-none px-3 py-4 text-base leading-relaxed custom-scrollbar duration-200 overflow-y-auto"
+                      style={{
+                        wordWrap: "break-word",
+                        overflowWrap: "break-word",
+                        whiteSpace: "pre-wrap",
+                      }}
                       disabled={isPending}
+                      aria-label="Job description input"
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs mt-1 px-3" />
                 </FormItem>
               )}
             />
+          </div>
 
-            {/* Submit Button */}
+          {/* Second section: Bottom strip with upload,reset and submit buttons */}
+          <div className="px-3 py-2 border-t border-border flex items-center justify-between">
+            {/* Left side: Plus button and Reset button */}
+            <div className="flex items-center space-x-2">
+              <Label htmlFor="resume-upload-hidden" className="cursor-pointer">
+                <Button
+                  type="button"
+                  variant={fileName ? "secondary" : "ghost"}
+                  size="sm"
+                  className="h-8 w-8 p-0 rounded-md"
+                  asChild
+                >
+                  <div className="flex items-center justify-center">
+                    <Plus className="h-4 w-4" />
+                    <span className="sr-only">Upload resume file</span>
+                  </div>
+                </Button>
+              </Label>
+
+              {onReset && (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => {
+                    form.reset({
+                      resume: null,
+                      jobDescription: "",
+                    });
+                    onReset();
+                  }}
+                  className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center space-x-1 py-1 px-2 rounded-md border border-border"
+                  title="Reset form"
+                  aria-label="Reset form to start over"
+                >
+                  <RotateCcw className="w-3 h-3" />
+                  <span>Reset</span>
+                </Button>
+              )}
+            </div>
+
+            {/* Right side: Send button */}
             <Button
               type="submit"
-              disabled={isPending}
-              className="w-full flex-shrink-0"
-              size="lg"
+              disabled={isPending || !isFormValid}
+              size="sm"
+              className="h-8 w-8 p-0 rounded-md"
+              aria-label="Submit resume comparison"
             >
               {isPending ? (
-                <>
-                  <svg
-                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Analysing...
-                </>
+                <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                "Compare Resume"
+                <Send className="h-4 w-4" />
               )}
             </Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+          </div>
+
+          {/* Form validation error for file - only show if no file attached
+          {!fileName && (
+            <FormField
+              control={form.control}
+              name="resume"
+              render={() => (
+                <FormItem>
+                  <FormMessage className="text-xs px-3 pb-2" />
+                </FormItem>
+              )}
+            />
+          )} */}
+        </form>
+      </Form>
+    </div>
   );
 }

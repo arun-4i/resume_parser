@@ -1,5 +1,7 @@
 # .cursor/.cursorrules — Frontend Rules Router & Workflow
 
+# Always use powershell commands only in terminal no command prompt commands.
+
 # Main entry for all frontend rules, standards, and plans. Start here for any new feature, refactor, or process change.
 
 # Always use the Context7 MCP tool to access documentation. Only provide the latest, up-to-date, non-deprecated code and APIs.
@@ -11,7 +13,7 @@
 # WORKFLOW (Frontend)
 
 1. **Requirements Clarification:** AI must always start by creating a requirements clarification section (using the template below) and get user confirmation or answers.
-2. **Planning:** After clarification, AI must generate a detailed, tickable plan file in `.cursor/tasks/YYYY-MM-DD/` (today's date, in YYYY-MM-DD format) before any implementation begins. **This applies to all major changes, including process/rules changes.**
+2. **Planning:** After clarification, AI must generate a detailed, tickable plan file in `.cursor/tasks/DD-MM-YY/` (today's date, in DD-MM-YY format) before any implementation begins. **This applies to all major changes, including process/rules changes.**
 3. **Approval:** User must review and approve the plan file (add "Plan Approved By:" in the plan) before any code or implementation work starts. **The plan file is the single source of truth for the change until merged.**
 4. **Implementation:** Only after approval, complete tasks, using the Bug-Prevention Checklist in each plan.
 5. **Code Review & Testing:** All code must be reviewed and pass tests before completion. See code review and testing rules.
@@ -26,6 +28,7 @@
 - [rules/frontend-dev.mdc]: Main standards for architecture, packages, and best practices. Use for all development.
 - [rules/frontend-code-review.mdc]: Code review checklist and best practices. Use before merging any code.
 - [rules/frontend-linting.mdc]: Linting/formatting requirements. Use before submitting or merging code.
+- [HOOKS LIBRARY STANDARDS]: Use usehooks-ts for common hooks. Use for all hook implementations.
 - [tasks/example-plan.md]: Plan template. Use for all new features or major changes.
 
 # ---
@@ -34,6 +37,11 @@
 
 - Feature Overview
 - Component/API Specification
+- **Layout & Positioning Details** (NEW - ask specific positioning questions)
+- **Responsive Behavior Specification** (NEW - mobile vs desktop requirements)
+- **Visual Integration Requirements** (NEW - background, borders, blending)
+- **State Management Expectations** (NEW - persistence, clearing, triggers)
+- **Animation & Interaction Preferences** (NEW - desired vs distracting effects)
 - Validation Requirements
 - Business Logic Rules
 - Error Handling
@@ -48,7 +56,13 @@
 
 - [ ] Accessibility (a11y) checked
 - [ ] Responsive on all breakpoints
+- [ ] **Mobile/Desktop layout conflicts tested** (NEW)
+- [ ] **Visual integration and background consistency verified** (NEW)
+- [ ] **Button positioning and layout flow confirmed** (NEW)
+- [ ] **Z-index layering tested on mobile and desktop** (NEW)
 - [ ] State edge cases handled
+- [ ] **Form state persistence behavior confirmed** (NEW)
+- [ ] **Animation conflicts and timing tested** (NEW)
 - [ ] Error boundaries in place
 - [ ] Security best practices followed
 - [ ] Performance reviewed
@@ -94,6 +108,15 @@
 
 # ---
 
+# HOOKS LIBRARY STANDARDS (2025-07-11)
+
+- Use `usehooks-ts` library for common custom hooks before creating custom implementations.
+- Prefer `useIntersectionObserver`, `useLocalStorage`, `useDebounce`, etc. from usehooks-ts.
+- Follow usehooks-ts patterns and API when available.
+- Only create custom hooks when usehooks-ts doesn't provide the needed functionality.
+
+# ---
+
 # RESPONSIVE & MOBILE-FIRST REQUIREMENTS (2025-01-09)
 
 - All UIs must be fully responsive and tested on both mobile and desktop breakpoints.
@@ -135,6 +158,82 @@
 # ANIMATION & PERFORMANCE (2025-01-09)
 
 - Use Framer Motion for all UI transitions and animations.
-- Animations must be fast (2-8ms per character for typing effects), smooth, and not block user input.
+- Animations must be fast (1-5ms per character for typing effects), smooth, and not block user input.
 - Memoize components where appropriate to avoid unnecessary re-renders.
 - Use React.memo, useMemo, and useCallback strategically for performance optimization.
+
+# ---
+
+# ENHANCED REQUIREMENTS CLARIFICATION STRATEGY (2025-01-11)
+
+## Pre-Implementation Questions (Based on Debugging Pattern Analysis)
+
+**Before any UI/layout implementation, AI MUST ask these specific questions:**
+
+1. **Layout Positioning**: "Where exactly should each element be positioned? (left/center/right, top/bottom)"
+2. **Responsive Behavior**: "How should this look and behave differently on mobile vs desktop?"
+3. **Visual Integration**: "Should this blend seamlessly with the background or have distinct styling?"
+4. **State Management**: "When should data be cleared vs preserved? What triggers state changes?"
+5. **Animation Preferences**: "What animations are desired vs distracting? What should happen during transitions?"
+6. **Form Structure**: "Should this be a single form or multiple sections? Where should buttons be positioned?"
+7. **Background & Borders**: "Should elements have borders, backgrounds, or blend seamlessly?"
+8. **Z-index & Layering**: "What should appear on top of what? Any overlay requirements?"
+
+## Implementation Validation Checklist
+
+**During implementation, AI MUST verify:**
+
+- [ ] **Mobile/Desktop Consistency**: Test responsive behavior immediately
+- [ ] **Visual Integration**: Verify background blending and border consistency
+- [ ] **State Persistence**: Confirm when data should be preserved vs cleared
+- [ ] **Animation Conflicts**: Check for interfering animations or timing issues
+- [ ] **Z-index Layering**: Ensure proper element stacking on both mobile and desktop
+- [ ] **Form Flow**: Test complete user journey from start to finish
+- [ ] **Edge Cases**: Test with long content, empty states, and error conditions
+
+## Common Debugging Patterns to Avoid
+
+**Pattern 1: Layout Specification Gaps**
+- ❌ Implementing without exact positioning details
+- ✅ Ask for specific layout requirements upfront
+
+**Pattern 2: Responsive Design Conflicts**
+- ❌ Making desktop changes without testing mobile
+- ✅ Test both breakpoints during development
+
+**Pattern 3: Visual Integration Problems**
+- ❌ Adding borders/backgrounds without considering parent context
+- ✅ Verify visual consistency across all components
+
+**Pattern 4: State Management Edge Cases**
+- ❌ Assuming form behavior without confirming persistence requirements
+- ✅ Clarify state management expectations before implementation
+
+**Pattern 5: Animation Timing Conflicts**
+- ❌ Adding animations without considering interactions
+- ✅ Plan animation sequences and test for conflicts
+
+---
+
+# RESOLVED BUGS LOG (2025-01-11)
+
+## Chat Form Layout and Scrolling Bugs (Fixed 2025-01-11)
+
+- **Issue:** Extra scroll space behind floating form causing poor UX
+- **Issue:** Fixed textarea height (150px) not responsive to content length
+- **Issue:** Transparency effects making form elements hard to see
+- **Issue:** Chat content overlapping with form during long responses
+- **Solution:** Changed textarea to auto-growing (min-h-[60px] max-h-[120px]), removed transparency effects, adjusted chat container padding from pb-60 to pb-32, updated intersection observer margins from -220px to -140px
+- **Components:** ResumeCompareClient.tsx, ResumeCompareForm.tsx
+
+## Phase 5 Final Layout Fixes (Fixed 2025-01-11)
+
+- **Issue:** Button layout misalignment - needed simple flex layout with specific positioning
+- **Issue:** Form structure disorganization - user wanted 3-section form with proper backgrounds
+- **Issue:** Border visibility problems - textarea borders needed complete removal for seamless blending
+- **Issue:** Mobile z-index conflicts - form showing behind chat on mobile
+- **Issue:** Desktop line artifacts - unwanted border lines appearing beside form
+- **Solution:** Implemented `justify-between` flex with grouped buttons, created 3-section form with horizontal strips, added comprehensive border-removal classes, fixed mobile layering with explicit z-index values, removed unwanted border-r class
+- **Components:** ResumeCompareForm.tsx, ResumeCompareClient.tsx
+- **Key Learning:** User's direct visual feedback was most effective for precise fixes
+- **Workflow Improvement:** Initial requirements needed more specific layout positioning details

@@ -3,7 +3,8 @@
 import { axiosInstance } from "@/api/axios";
 import { z } from "zod";
 
-// Zod schema for form validation
+// Server-side Zod schema for FormData validation
+// Note: Server receives File objects from FormData, not FileList from client
 const ResumeCompareSchema = z.object({
   email: z
     .string()
@@ -12,18 +13,17 @@ const ResumeCompareSchema = z.object({
   resume: z
     .instanceof(File)
     .refine((file) => file.size > 0, "Please select a resume file")
-    .refine(
-      (file) =>
-        [
-          "application/pdf",
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        ].includes(file.type),
-      "Only PDF and DOCX files are allowed"
-    )
-    .refine(
-      (file) => file.size <= 10 * 1024 * 1024, // 10MB limit
-      "File size must be less than 10MB"
-    ),
+    .refine((file) => {
+      const allowedTypes = [
+        "application/pdf",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ];
+      return allowedTypes.includes(file.type);
+    }, "Only PDF and DOCX files are allowed")
+    .refine((file) => {
+      const maxSize = 10 * 1024 * 1024; // 10MB limit
+      return file.size <= maxSize;
+    }, "File size must be less than 10MB"),
   jobDescription: z
     .string()
     .min(1, "Job description is required")
@@ -35,12 +35,11 @@ export type ResumeCompareFormData = z.infer<typeof ResumeCompareSchema>;
 
 export interface ResumeCompareResult {
   success: boolean;
-  data: {
+  data?: {
     email?: string;
     rating?: string;
     content?: string;
   };
-
   error?: string;
 }
 

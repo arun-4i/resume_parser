@@ -17,3 +17,23 @@ alwaysApply: false
 ## Enforcement
 - All code must pass linting and formatting checks before merge
 - Fix all warnings and errors before submitting code for review
+
+## Enhanced Testing Requirements (Updated 2025-01-11)
+
+### Mobile/Desktop Testing
+- All UI components must be tested on both mobile and desktop breakpoints before submission
+- Use browser dev tools AND actual devices for testing
+- Verify responsive behavior works correctly across all screen sizes
+- Test z-index layering on both mobile and desktop views
+
+### Visual Integration Testing
+- Verify all components blend properly with their parent backgrounds
+- Check for unwanted borders, shadows, or visual artifacts
+- Ensure consistent spacing and padding across components
+- Test with different content lengths (empty, normal, long text)
+
+### State Management Testing
+- Test form state persistence across different user interactions
+- Verify data clearing behavior matches requirements
+- Test edge cases like file uploads, text changes, and form submissions
+- Ensure state management works correctly on both mobile and desktop

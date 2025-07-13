@@ -70,3 +70,33 @@ alwaysApply: false
 - [ ] Framer Motion used for all UI transitions
 - [ ] Animations are fast (2-8ms for typing effects) and don't block input
 - [ ] No unnecessary re-renders
+
+### Enhanced UI/Layout Implementation Validation (Updated 2025-01-11)
+
+**Code reviewer MUST verify these were addressed during implementation:**
+
+#### Pre-Implementation Questions Verified
+- [ ] **Layout Positioning**: Exact element positioning was confirmed (left/center/right, top/bottom)
+- [ ] **Responsive Behavior**: Mobile vs desktop behavior differences were specified
+- [ ] **Visual Integration**: Background blending vs distinct styling was clarified
+- [ ] **State Management**: Data clearing vs preservation requirements were defined
+- [ ] **Animation Preferences**: Desired vs distracting animations were discussed
+- [ ] **Form Structure**: Form sections and button positioning were specified
+- [ ] **Background & Borders**: Border and background requirements were clarified
+- [ ] **Z-index & Layering**: Element stacking and overlay requirements were defined
+
+#### Implementation Validation Completed
+- [ ] **Mobile/Desktop Consistency**: Responsive behavior tested immediately during development
+- [ ] **Visual Integration**: Background blending and border consistency verified
+- [ ] **State Persistence**: Data preservation vs clearing behavior confirmed
+- [ ] **Animation Conflicts**: Interfering animations and timing issues checked
+- [ ] **Z-index Layering**: Proper element stacking verified on both mobile and desktop
+- [ ] **Form Flow**: Complete user journey tested from start to finish
+- [ ] **Edge Cases**: Long content, empty states, and error conditions tested
+
+#### Common Debugging Patterns Avoided
+- [ ] **Layout Specification Gaps**: Avoided implementing without exact positioning details
+- [ ] **Responsive Design Conflicts**: Avoided making desktop changes without testing mobile
+- [ ] **Visual Integration Problems**: Avoided adding borders/backgrounds without considering parent context
+- [ ] **State Management Edge Cases**: Avoided assuming form behavior without confirming persistence requirements
+- [ ] **Animation Timing Conflicts**: Avoided adding animations without considering interactions
