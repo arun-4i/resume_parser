@@ -1,0 +1,32 @@
+---
+description: Security standards covering auto encrypt/decrypt middleware, input sanitization, file upload validation, and mandatory security review procedures.
+globs: 
+alwaysApply: false
+---
+
+# Security Rule (Encrypt/Decrypt, Input)
+
+<!-- ## 1. Auto Encrypt/Decrypt Middleware
+
+- All sensitive form data must be encrypted in transit and at rest.
+- Implement middleware in `middleware.ts` to auto-encrypt/decrypt payloads.
+- Use strong, audited crypto libraries only. -->
+
+## 1. Input Sanitization
+
+- Sanitize all user input before processing or storage.
+- Reject input with XSS, SQLi, or other injection patterns.
+- Reference validation rule for schema-level sanitization.
+
+## 2. File Upload Security
+
+- Validate file type, size, and scan for malware.
+- Reject files with suspicious content or extensions.
+
+## 3. Review
+
+- Security rules must be reviewed after every major release.
+
+## 4. Review
+
+- Security rules must be reviewed after every major release.

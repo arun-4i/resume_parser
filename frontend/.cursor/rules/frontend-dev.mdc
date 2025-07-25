@@ -1,205 +1,38 @@
 ---
-description: Core coding best practices for all frontend development. Agent-requestable.
+description: Core frontend development standards covering TypeScript strict mode, component architecture, error handling, accessibility requirements, and Context7 MCP integration for documentation access.
 globs:
 alwaysApply: false
 ---
 
-rontend Development Standards (Next.js 15, React 19, TypeScript)
-Tech Stack
-Next.js 15 (App Router), React 19, TypeScript (strict)
-ShadCN UI, Tailwind CSS, Zustand, TanStack Query v5, nuqs, React Hook Form + Zod, NextAuth.js v5, Framer Motion, next-intl
+# Frontend Development Rule
 
-###Folder Structure & Naming Conventions
-Folder Structure: A scalable, feature-first structure aligned with Next.js 15 App Router conventions.
+## 1. TypeScript Standards
 
-- All new custom components (such as Navbar) must be placed in 'src/components/'.
-- The 'ui' directory is reserved only for shadcn components.
+- Use strict TypeScript mode with proper type inference
+- Define explicit interfaces for all props and API responses
+- No `any` types except in legacy code migration or worst case scenario
 
-```
-src/
-  ├── api/
-  |   |-- axios.ts              # axios instance
-  |   |-- env.ts                # env validation using zod
-  ├── app/                      # Next.js 15 App Router
-  │   ├── (protected)/
-  |   |   |-- (home)/             # page name
-  |   |   |    |-- page.tsx     # landing page for home
-  |   |   |    |── error.tsx    # home error page
-  │   |   |    |── not-found.tsx # home not-found page page
-  │   |   |    |── loading.tsx           # home loading page page
-  │   │   ├── layout.tsx        # protected layout for protected section
-  │   ├── layout.tsx            # Root layout
-  │   ├── page.tsx              # Root page (homepage)
-  │   |── error.tsx             # Root error page
-  │   |── not-found.tsx         # Root not-found page page
-  │   |── loading.tsx           # Root loading page page
-  │   └── globals.css           # Global styles
-  │
-  ├── components/               # Globally shared components
-  │   ├── ui/                   # Unstyled primitives from ShadCN
-  │   └── shared/               # Common, project-wide components
-  ├── lib/                      # Project libraries & utilities
-  |   |--home/                  # Server action for home page
-  │   |    ├── actions.ts            # Server Actions specfic to that page
-  │   ├── auth.ts               # NextAuth.js config & utilities
-  │   ├── utils.ts              # General helper functions (formatters, etc.)
-  |   |-- home/                 # page specific validators
-  │   └── validators.ts         # Zod schemas
-  │
-  ├── hooks/                    # Custom React hooks (e.g., use-media-query.ts)
-  ├── providers/                # Global context providers (Theme, QueryClient)
-  ├── stores/                   # Zustand client-side stores
-  └── middleware.ts             # Next.js middleware for auth, redirects, etc.
-```
+## 2. Component Standards
 
-- **Naming:**
-  - Components/Layouts: `PascalCase.tsx`
-  - Hooks: `use-kebab-case.ts`
-  - Other files/folders: `kebab-case`
+- Functional components with proper JSX structure
+- Memoization for performance-critical components
+- Clear separation of concerns (presentation vs logic)
 
-## Coding Best Practices
+## 3. Documentation Access
 
-- Use modern JS/TS, React 19+, Next.js 15+ features
-- Strict typing; functional components and hooks
-- Keep code clear, maintainable, and DRY
-- Small, focused, reusable components
-- Use state management (Zustand, TanStack Query) appropriately; avoid prop drilling
-- Prioritize accessibility (a11y) and performance (lazy loading, memoization, code splitting)
-- Use Tailwind CSS & ShadCN UI for styling
-- Handle errors gracefully; provide user feedback
-- Avoid hardcoding; use config/env variables
-- No deprecated APIs; keep dependencies minimal and updated
-- Write tests for logic and critical UI
-- Document complex logic as needed
-- All React components that use client-side hooks (e.g., useState, useEffect, useTheme) must include the 'use client' directive at the top of the file. This is required for Next.js client components.
-- Any file that uses client-side hooks (such as useSidebar, useState, useEffect, useTheme, etc.) must include the 'use client' directive at the top. This is required for Next.js client components and layouts.
+- Always use Context7 MCP tool for accessing official documentation
+- Provide latest, up-to-date, non-deprecated code and APIs only
+- Reference official docs for Next.js, React, and other technologies
 
-## Component & Hook Guidelines
+## 4. Error Handling
 
-- Prefer Server Components for data/static content; use "use client" only for interactivity
-- Single responsibility per component/hook
-- Separate UI, logic, and data-fetching
-- Use props for config, children for composition
-- Extract reusable logic into hooks/utilities
-- All async UI must have `loading.tsx` and `error.tsx` fallbacks
+- Implement proper error boundaries
+- User-friendly error messages (never expose internals)
+- Graceful degradation for network failures
 
-## State & Context
+## 5. Accessibility
 
-- Use custom hooks for client logic; prefix with "use"
-- Use context only for truly global state; prefer single source of truth (Zustand)
-- Clean up side effects in hooks
-
-## Code Quality
-
-- Follow DRY, KISS, and separation of concerns
-- Immutability for state
-- Named exports; avoid wildcard imports
-- Descriptive, consistent naming
-- Zero lint warnings/errors; use Prettier & ESLint
-
-## Documentation & Environment
-
-- Document public APIs, complex components, and hooks
-- Use .env for config; never commit secrets; validate env vars at startup
-
-## Accessibility & Security
-
-- Use semantic HTML; ensure keyboard/screen reader support
-- Audit a11y regularly (axe, Lighthouse)
-- Sanitize user input/output; avoid `dangerouslySetInnerHTML`
-- Monitor dependencies for vulnerabilities
-
-## Performance & Testing
-
-- Remove deprecated code/APIs/deps regularly
-- Use React.memo, useMemo, and useCallback strategically for performance optimization
-- Memoize components where appropriate to avoid unnecessary re-renders
-- Test all edge cases: empty, invalid, and large inputs
-- Use Storybook or similar tools for isolated UI testing
-
-## Responsive & Mobile-First Design (Updated 2025-01-09)
-
-- All UIs must be fully responsive and tested on both mobile and desktop breakpoints
-- Use mobile-first design approach with Tailwind's responsive utilities (`lg:`, `md:`, etc.)
-- Conditional rendering required for mobile vs desktop layouts when they differ significantly
-- Test all components on actual devices, not just browser dev tools
-- Avoid fixed widths except for intentional sidebars; use `max-w-*` for content
-
-## TypeScript & Validation Standards (Updated 2025-01-09)
-
-- Use explicit TypeScript types for all function parameters, especially form data and validation schemas
-- Avoid relying solely on Zod inference for complex objects (e.g., FileList, nested objects)
-- All user-facing forms must use Zod + React Hook Form for validation
-- Server actions must have comprehensive error handling and type safety
-- Mark all props and function parameters as `readonly` where possible
-
-## SonarQube Compliance (Updated 2025-01-09)
-
-- Use `??` (nullish coalescing) instead of `||` for default values
-- Avoid deep nesting in JSX and logic (max 3 levels); prefer flat, readable structures
-- Do not use nested ternary operators; use if/else statements or helper functions instead
-- Avoid unused variables and parameters (prefix with `_` if needed)
-- Extract complex logic into helper functions to improve readability
-
-## Enhanced Error Handling & Accessibility (Updated 2025-01-09)
-
-- All error messages must be user-friendly and never expose internal details
-- Provide immediate feedback for user actions (loading states, success/error messages)
-- Use semantic HTML, ARIA labels, and ensure keyboard navigation for all interactive elements
-- Test accessibility with screen readers and keyboard-only navigation
-
-## Animation & UX (Updated 2025-01-09)
-
-- Use Framer Motion for all UI transitions and animations
-- Animations must be fast (2-8ms per character for typing effects), smooth, and not block user input
-- Provide visual feedback for all user interactions
-- Ensure animations are accessible and can be disabled if needed
-
-## Enhanced Requirements Clarification Strategy (Updated 2025-01-11)
-
-### Pre-Implementation Questions (MANDATORY for all UI/layout features)
-
-**Before any UI/layout implementation, developers MUST ask these specific questions:**
-
-1. **Layout Positioning**: "Where exactly should each element be positioned? (left/center/right, top/bottom)"
-2. **Responsive Behavior**: "How should this look and behave differently on mobile vs desktop?"
-3. **Visual Integration**: "Should this blend seamlessly with the background or have distinct styling?"
-4. **State Management**: "When should data be cleared vs preserved? What triggers state changes?"
-5. **Animation Preferences**: "What animations are desired vs distracting? What should happen during transitions?"
-6. **Form Structure**: "Should this be a single form or multiple sections? Where should buttons be positioned?"
-7. **Background & Borders**: "Should elements have borders, backgrounds, or blend seamlessly?"
-8. **Z-index & Layering**: "What should appear on top of what? Any overlay requirements?"
-
-### Implementation Validation Checklist
-
-**During implementation, developers MUST verify:**
-
-- [ ] **Mobile/Desktop Consistency**: Test responsive behavior immediately
-- [ ] **Visual Integration**: Verify background blending and border consistency
-- [ ] **State Persistence**: Confirm when data should be preserved vs cleared
-- [ ] **Animation Conflicts**: Check for interfering animations or timing issues
-- [ ] **Z-index Layering**: Ensure proper element stacking on both mobile and desktop
-- [ ] **Form Flow**: Test complete user journey from start to finish
-- [ ] **Edge Cases**: Test with long content, empty states, and error conditions
-
-### Common Debugging Patterns to Avoid
-
-**Pattern 1: Layout Specification Gaps**
-- ❌ Implementing without exact positioning details
-- ✅ Ask for specific layout requirements upfront
-
-**Pattern 2: Responsive Design Conflicts**
-- ❌ Making desktop changes without testing mobile
-- ✅ Test both breakpoints during development
-
-**Pattern 3: Visual Integration Problems**
-- ❌ Adding borders/backgrounds without considering parent context
-- ✅ Verify visual consistency across all components
-
-**Pattern 4: State Management Edge Cases**
-- ❌ Assuming form behavior without confirming persistence requirements
-- ✅ Clarify state management expectations before implementation
-
-**Pattern 5: Animation Timing Conflicts**
-- ❌ Adding animations without considering interactions
-- ✅ Plan animation sequences and test for conflicts
+- Semantic HTML structure
+- ARIA labels for complex components
+- Keyboard navigation support
+- Screen reader compatibility

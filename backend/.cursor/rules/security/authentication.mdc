@@ -1,3 +1,10 @@
+---
+description: Defines authentication, role-based access control (RBAC), and rate limiting standards for backend development.
+globs:
+  - "**/*"
+alwaysApply: false
+---
+
 # Authentication, RBAC, and Rate Limiting
 
 This file defines authentication, role-based access control (RBAC), and rate limiting standards for backend development. For related security standards, see other files in the security folder.

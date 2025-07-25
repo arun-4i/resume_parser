@@ -1,3 +1,10 @@
+---
+description: Swagger/OpenAPI documentation standards using Zod schemas, globs field, and alwaysApply: false.
+globs:
+  - "**/*"
+alwaysApply: false
+---
+
 # Swagger/OpenAPI Documentation Standards
 
 This file defines Swagger/OpenAPI documentation standards for backend development. For related development standards, see other files in the development folder.

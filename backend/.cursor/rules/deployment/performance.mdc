@@ -1,3 +1,10 @@
+---
+description: Performance, Caching, and Optimization Standards
+globs:
+  - "**/*"
+alwaysApply: false
+---
+
 # Performance, Caching, and Optimization Standards
 
 This file defines performance, caching, and optimization standards for backend development. For related deployment standards, see other files in the deployment folder.
@@ -31,8 +38,5 @@ app.use(compression());
 - Monitor performance with tools like New Relic, Datadog
 - Profile and optimize slow endpoints
 - Reference [rules/deployment/environment.mdc] for config
-  description:
-  globs:
-  alwaysApply: false
 
 ---

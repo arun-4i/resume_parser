@@ -3,7 +3,6 @@ import { DataTypes, Model, Optional } from "sequelize";
 import { DatabaseConnection } from "@config/database";
 import bcrypt from "bcrypt";
 import { config } from "@config/env";
-import { UserProfile } from "./userProfile";
 
 interface UserAttributes {
   id: number;
@@ -89,15 +88,5 @@ User.init(
   }
 );
 
-User.hasMany(UserProfile, {
-  sourceKey: "id",
-  foreignKey: "userId",
-  as: "profiles",
-});
-
-UserProfile.belongsTo(User, {
-  foreignKey: "userId",
-  as: "user",
-});
 
 export { User, UserAttributes, UserCreationAttributes };

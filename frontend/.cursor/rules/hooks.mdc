@@ -1,0 +1,27 @@
+---
+description: React hooks standards covering usehooks-ts library preference, custom hooks documentation, and best practices for performance and side effects.
+globs:
+alwaysApply: false
+---
+
+# Hooks Usage Rule
+
+## 1. Library Preference
+
+- Prefer usehooks-ts for common hooks (intersection observer, etc.).
+
+## 2. Custom Hooks
+
+- Custom hooks must be documented with usage and return types.
+- Place in `src/hooks/`.
+
+## 3. Best Practices
+
+- Avoid side effects in render phase.
+- Memoize expensive computations.
+- write a hook if the same functionality is used across compoenents, always prefer to modularize code.
+
+## 3. Best Practices
+
+- Avoid side effects in render phase.
+- Memoize expensive computations.

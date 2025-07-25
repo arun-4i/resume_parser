@@ -1,39 +1,31 @@
 ---
-description: Linting and formatting requirements for all frontend code. Covers tools, configuration, and enforcement for code consistency. Agent-requestable.
-globs: 
+description: Code quality standards covering ESLint configuration, Prettier formatting, pre-commit hooks, and TypeScript strict mode enforcement.
+globs:
 alwaysApply: false
 ---
-# Frontend Linting & Formatting Standards
-## Tools
-- **ESLint:** For JavaScript/TypeScript linting
-- **Prettier:** For code formatting
-- **Stylelint:** For CSS/Tailwind (optional, if using custom CSS)
 
-## Configuration
-- Use the project's shared ESLint and Prettier configs
-- Extend with recommended plugins for React, TypeScript, Next.js, Tailwind, etc.
-- Enforce rules for code style, unused variables, imports, and accessibility
+# Frontend Linting & Formatting Rule
 
-## Enforcement
-- All code must pass linting and formatting checks before merge
-- Fix all warnings and errors before submitting code for review
+## 1. ESLint Configuration
 
-## Enhanced Testing Requirements (Updated 2025-01-11)
+- Use strict ESLint rules for TypeScript/React
+- No unused variables or imports
+- Consistent naming conventions (camelCase, PascalCase)
 
-### Mobile/Desktop Testing
-- All UI components must be tested on both mobile and desktop breakpoints before submission
-- Use browser dev tools AND actual devices for testing
-- Verify responsive behavior works correctly across all screen sizes
-- Test z-index layering on both mobile and desktop views
+## 2. Prettier Formatting
 
-### Visual Integration Testing
-- Verify all components blend properly with their parent backgrounds
-- Check for unwanted borders, shadows, or visual artifacts
-- Ensure consistent spacing and padding across components
-- Test with different content lengths (empty, normal, long text)
+- Automatic code formatting on save
+- Consistent indentation and line breaks
+- Trailing commas and semicolons
 
-### State Management Testing
-- Test form state persistence across different user interactions
-- Verify data clearing behavior matches requirements
-- Test edge cases like file uploads, text changes, and form submissions
-- Ensure state management works correctly on both mobile and desktop
+## 3. Pre-commit Hooks
+
+- Husky for git hooks
+- Lint-staged for incremental checks
+- Block commits with linting errors
+
+## 4. TypeScript Strict Mode
+
+- Enable all strict mode flags
+- No implicit any or undefined returns
+- Proper null checking

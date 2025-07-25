@@ -1,0 +1,25 @@
+---
+description: Animation standards for Framer Motion vs Tailwind CSS transitions, performance considerations, and bundle size impact guidelines.
+globs:
+alwaysApply: false
+---
+
+# Animation Rule (Framer Motion)
+
+## 1. Usage Policy
+
+- Use Framer Motion only for complex, interactive animations that cannot be achieved with CSS.
+- For simple transitions (opacity, scale, color), use Tailwind CSS transitions.
+
+## 2. Performance
+
+- Avoid Framer Motion if it adds >3KB to bundle for a single effect.
+- Profile animation impact on mobile devices.
+
+## 3. Review
+
+- Remove unused animation code after feature changes.
+
+## 3. Review
+
+- Remove unused animation code after feature changes.

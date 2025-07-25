@@ -8,7 +8,9 @@
 
 # single source of truth for backend best practices.
 
-# Cursor Rules Index for backend_boilerplate
+# IMPORTANT: All rules, tasks, feedback, docs and .cursorrules reside inside the .cursor folder only.
+
+# New rule files, task plans, feedback files, and documentation should be created inside the .cursor folder structure.
 
 # This file is the main entry point for all backend rules and workflow.
 
@@ -18,7 +20,7 @@
 
 # - For every new feature or major change request, the AI must first perform a **Requirements Clarification** step (see [rules/workflow.mdc]).
 
-# - After clarification, create a plan/checklist as a Markdown file in tasks/YYYY-MM-DD/.
+# - After clarification, create a plan/checklist as a Markdown file in tasks/DD-MM-YY/.
 
 # - All plans must include a 'Retrospective & Feedback' section (see [rules/workflow.mdc]).
 

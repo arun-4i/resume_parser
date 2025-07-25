@@ -1,9 +1,8 @@
 "use client";
 
-import { useTransition } from "react";
+import React, { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { RotateCcw, Plus, Loader2, Send, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,48 +16,14 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { resumeCompareServerAction } from "@/app/actions/resume-compare/resume-compare-server-action";
 import {
-  resumeCompareServerAction,
+  ResumeCompareFormSchema,
+  type ResumeCompareFormData,
   type ResumeCompareResult,
-} from "@/app/actions/resume-compare/resume-compare-server-action";
-import React from "react";
-
-// Simplified form validation schema (email removed temporarily)
-type ResumeCompareFormData = {
-  resume: FileList | null;
-  jobDescription: string;
-};
-
-const ResumeCompareFormSchema = z.object({
-  resume: z
-    .custom<FileList | null>()
-    .refine((files) => {
-      if (typeof window === "undefined") return true;
-      return files && files.length > 0;
-    }, "Please select a resume file")
-    .refine((files) => {
-      if (typeof window === "undefined" || !files || files.length === 0)
-        return true;
-
-      const allowedTypes = [
-        "application/pdf",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      ];
-      return allowedTypes.includes(files[0].type);
-    }, "Only PDF and DOCX files are allowed")
-    .refine((files) => {
-      if (typeof window === "undefined" || !files || files.length === 0)
-        return true;
-
-      const maxSize = 10 * 1024 * 1024; // 10MB
-      return files[0].size <= maxSize;
-    }, "File size must be less than 10MB"),
-  jobDescription: z
-    .string()
-    .min(1, "Job description is required")
-    .min(10, "Job description must be at least 10 characters")
-    .max(5000, "Job description must be less than 5000 characters"),
-});
+  ALLOWED_FILE_TYPES,
+} from "@/lib/schemas";
+import { useUserInfoStore } from "@/store/userInfoStore";
 
 interface ResumeCompareFormProps {
   onSubmitStart: () => void;
@@ -74,6 +39,8 @@ export default function ResumeCompareForm({
   onReset,
 }: Readonly<ResumeCompareFormProps>) {
   const [isPending, startTransition] = useTransition();
+  const userInfo = useUserInfoStore((s) => s.userInfo);
+  const clearUserInfo = useUserInfoStore((s) => s.clearUserInfo);
 
   const form = useForm<ResumeCompareFormData>({
     resolver: zodResolver(ResumeCompareFormSchema),
@@ -81,28 +48,37 @@ export default function ResumeCompareForm({
       resume: null,
       jobDescription: "",
     },
-    mode: "onChange", // This enables real-time validation
+    mode: "onSubmit",
   });
 
   const handleSubmit = async (data: ResumeCompareFormData) => {
     onSubmitStart();
 
     startTransition(async () => {
-      if (!data.resume || data.resume.length === 0) {
+      const resumeFiles = data.resume;
+      if (!resumeFiles || resumeFiles.length === 0) {
         onError("Please select a resume file");
         return;
       }
-
+      if (!userInfo) {
+        onError(
+          "User info is missing. Please refresh and fill the details again."
+        );
+        return;
+      }
       try {
         const formData = new FormData();
-        formData.append("email", "user@example.com"); // Temporary hardcoded email
-        formData.append("resume", data.resume[0]);
+        formData.append("firstName", userInfo.firstName);
+        formData.append("email", userInfo.email);
+        formData.append("phone", userInfo.phone);
+        formData.append("resume", resumeFiles[0]);
         formData.append("jobDescription", data.jobDescription);
 
         const result = await resumeCompareServerAction(formData);
 
-        if (result.success && result.data?.content) {
+        if (result.success && result.data) {
           form.reset(data);
+          clearUserInfo();
           onSubmit(result);
         } else {
           onError(result.error ?? "An unexpected error occurred");
@@ -142,6 +118,19 @@ export default function ResumeCompareForm({
       form.clearErrors("resume");
     }
   }, [selectedFile, form]);
+
+  // Generate accept attribute from allowed file types
+  const acceptedFileTypes = ALLOWED_FILE_TYPES.map((type) => {
+    if (type === "application/pdf") return ".pdf";
+    if (
+      type ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    )
+      return ".docx";
+    return "";
+  })
+    .filter(Boolean)
+    .join(",");
 
   return (
     <div className="w-full">
@@ -188,7 +177,7 @@ export default function ResumeCompareForm({
                   <Input
                     {...field}
                     type="file"
-                    accept=".pdf,.docx"
+                    accept={acceptedFileTypes}
                     onChange={(e) => {
                       onChange(e.target.files);
                       // Clear any previous errors when file is selected
@@ -206,28 +195,6 @@ export default function ResumeCompareForm({
             )}
           />
 
-          {/* First section: Top strip with reset button */}
-          {/* {onReset && (
-            <div className="px-3 py-2 border-b border-border flex justify-end">
-              <button
-                type="button"
-                onClick={() => {
-                  form.reset({
-                    resume: null,
-                    jobDescription: "",
-                  });
-                  onReset();
-                }}
-                className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center space-x-1 py-1 px-2 rounded-md border border-border"
-                title="Reset form"
-                aria-label="Reset form to start over"
-              >
-                <RotateCcw className="w-3 h-3" />
-                <span>Reset</span>
-              </button>
-            </div>
-          )} */}
-
           {/* First section: Scrollable textarea */}
           <div className="">
             <FormField
@@ -239,7 +206,7 @@ export default function ResumeCompareForm({
                     <Textarea
                       {...field}
                       placeholder="Describe the job requirements..."
-                      className="dark:bg-transparent bg-transparent min-h-[50px] max-h-[120px] border-0 focus-visible:ring-0 resize-none px-3 py-4 text-base leading-relaxed custom-scrollbar duration-200 overflow-y-auto"
+                      className="shadow-none dark:bg-transparent bg-transparent min-h-[50px] max-h-[120px] border-none border-transparent focus-visible:ring-0 resize-none px-3 py-4 text-base leading-relaxed custom-scrollbar duration-200 overflow-y-auto"
                       style={{
                         wordWrap: "break-word",
                         overflowWrap: "break-word",
@@ -256,7 +223,7 @@ export default function ResumeCompareForm({
           </div>
 
           {/* Second section: Bottom strip with upload,reset and submit buttons */}
-          <div className="px-3 py-2 border-t border-border flex items-center justify-between">
+          <div className=" px-3 py-2  flex items-center justify-between">
             {/* Left side: Plus button and Reset button */}
             <div className="flex items-center space-x-2">
               <Label htmlFor="resume-upload-hidden" className="cursor-pointer">
@@ -311,19 +278,6 @@ export default function ResumeCompareForm({
               )}
             </Button>
           </div>
-
-          {/* Form validation error for file - only show if no file attached
-          {!fileName && (
-            <FormField
-              control={form.control}
-              name="resume"
-              render={() => (
-                <FormItem>
-                  <FormMessage className="text-xs px-3 pb-2" />
-                </FormItem>
-              )}
-            />
-          )} */}
         </form>
       </Form>
     </div>

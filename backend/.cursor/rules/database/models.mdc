@@ -1,3 +1,11 @@
+---
+description: Sequelize Model Patterns and Relationships
+globs:
+  - "**/*.model.ts"
+  - "**/*.model.js"
+alwaysApply: false
+---
+
 # Sequelize Model Patterns and Relationships
 
 This file defines standards for Sequelize models and relationships in backend development. For related database standards, see other files in the database folder.

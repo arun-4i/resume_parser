@@ -487,8 +487,8 @@ export const requestLogger = (
 // CENTRAL AUTO-PROTECTION MIDDLEWARE
 // ========================================
 const unprotectedRoutes = [
-  "/api/user/register",
-  "/api/user/login",
+  "/api/users/register",
+  "/api/users/login",
   "/api/health",
   "/api/health/detailed",
 ];

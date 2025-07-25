@@ -1,0 +1,27 @@
+---
+description: Responsive design standards using mobile-first approach, Tailwind breakpoints, device testing requirements, and layout adaptation principles.
+globs: 
+alwaysApply: false
+---
+
+# Responsiveness Rule
+
+## 1. Mobile-First
+
+- All layouts must be designed mobile-first.
+- Use Tailwind's responsive utilities for breakpoints.
+
+## 2. Breakpoints
+
+- Use explicit breakpoints: sm, md, lg, xl, 2xl.
+- Test on real devices (not just browser tools).
+
+## 3. Layout Adaptation
+
+- Ensure no horizontal scroll on any device.
+- Form and chat must be usable on all breakpoints.
+
+## 3. Layout Adaptation
+
+- Ensure no horizontal scroll on any device.
+- Form and chat must be usable on all breakpoints.

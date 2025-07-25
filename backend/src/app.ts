@@ -24,6 +24,7 @@ import { errorHandler, notFoundHandler } from "@utils/error";
 
 export const createApp = (): Application => {
   const app = express();
+  app.set("trust proxy", 1); // Enable trust proxy for correct client IP handling
   logger.info("system", "Initializing Express application", {
     nodeEnv: config.NODE_ENV,
     baseUrl: config.BASE_URL,

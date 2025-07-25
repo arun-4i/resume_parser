@@ -8,15 +8,13 @@ export const resumeService = {
   async summarizeResume(
     pdfBuffer: Buffer,
     jobDescription: string,
-    email: string
   ): Promise<any> {
     try {
-      logger.info("api", "Extracting text from PDF");
+      // logger.info("api", "Extracting text from PDF");
       // const pdfData = await pdfParse(pdfBuffer);
       // const extractedText = pdfData.text;
-      // const basePrompt = `You are an AI-based assistant that evaluates a resume against a provided job description. Your task is to assess how well the candidate matches the job requirements, extract the necessary details from the resume, and return the evaluation in a structured format. Please follow the steps below:
-      // 1. **Extract the email** from the resume. If the email is not available, return "Email Not Found".
-      // 2. **Assess the candidate's profile** based on the following:
+      // const basePrompt = `You are a Senior Recruitment HR that evaluates a resume against a provided job description. Your task is to assess how well the candidate matches the job requirements, extract the necessary details from the resume, and return the evaluation in a structured format. Please follow the steps below:
+      // 1. **Assess the candidate's profile** based on the following:
       //  - Education: Does the candidate meet the educational requirements for the job?
       //  - Experience: Does the candidate's experience align with the required level of experience?
       //  - Technical Skills: Does the candidate have the required technical skills? Mention any relevant skills not explicitly listed in the job description.
@@ -33,7 +31,7 @@ export const resumeService = {
       // logger.info("api", "Calling OpenAI API");
       // const openai = new OpenAI({ apiKey: config.OPENAI_API_KEY });
       // const response = await openai.chat.completions.create({
-      //   model: config.OPENAI_MODEL || "gpt-3.5-turbo",
+      //   model: config.OPENAI_MODEL || "gpt-4.1-mini-2025-04-14",
       //   messages: [
       //     { role: "system", content: basePrompt },
       //     { role: "user", content: prompt },
@@ -41,20 +39,19 @@ export const resumeService = {
       //   max_tokens: 1024,
       // });
       // logger.info("api", "OpenAI API call successful");
-      // console.info("RESPONSE: ", response.choices[0].message);
-      const response = {
-        content:
-          '{\n    "rating": 8,\n    "content": "The candidate\'s profile is assessed as follows:\\n\\nEducation: The candidate holds a B.Tech in Information Technology with a CGPA of 7.8, which meets the educational requirements for the job.\\n\\nExperience: The candidate has experience as a Web Developer Intern at Clustrex, where they developed features using technologies like AWS, GraphQL, ReactJS, TailWindCSS, demonstrating practical experience relevant to the job.\\n\\nTechnical Skills: The candidate has proficiency in various programming languages like Java, JavaScript, Python, and technologies such as ReactJS, HTML, CSS, NodeJS, and databases like SQL and MongoDB. The candidate also has experience with tools like AWS and GitHub, aligning well with the job requirements. Additionally, the candidate possesses skills in Agile, Scrum, CI/CD, and other development practices\\n\\nSoft Skills: The candidate demonstrates good problem-solving skills, communication, and collaboration abilities as evidenced by their project work in optimizing app development processes and creating secure applications.\\n\\nAdditional Factors: The candidate has certifications in Data Structures and Algorithms and Python Programming. They also have experience in project management, competitive coding, and knowledge of security best practices, which further enhance their suitability for the role.\\n\\nOverall, the candidate\'s profile is strong, with a good educational background, relevant e  the job description. However, to further improve, the candidate could showcase more experience with frameworks like React and databases like MySQL or MongoDB. The rating provided is 8 out of 10.is strong, with a good educational background, relevant experience, technical skills, and certifications, aligning well with the job description. However, to further improve, the candidate could showcase more experience with frameworks like React and databases like MySQL or MongoDB. The rating provided is 8 out of 10.is strong, with a good educational background, relevant experience, technical skills, and certifications, aligning well with the job description. However, to further improve, the candidate could showcase more experience with frameworks like React and databases like MySQL or MongoDB. The rating provided is 8 out of 10.is strong, with a good educational background, relevant experience, technical skills, and certifications, aligning well with the job description. However, to further improve, the candidate could showcase more experience with frameworks like React and databases like MySQL or MongoDB. The rating provided is 8 out of 10."\n}',
-      }; ;
-      const parsedContent = JSON.parse(response.content);
-      const formattedResponse = {
-        email: email,
-        rating: parsedContent.rating,
-        content: parsedContent.content,
-      };
+      // const parsedContent = JSON.parse(response.choices[0].message.content as string);
+      // const formattedResponse = {
+      //   rating: parsedContent.rating,
+      //   content: parsedContent.content,
+      // };
       // console.info("PARSED CONTENT: ", formattedResponse);
-      // return response.choices[0].message;
-      return formattedResponse;
+      // return formattedResponse;
+      const result =  {
+        rating: 8,
+        content:
+          "The candidate, Arun V S, has a B.Tech in Information Technology with a CGPA of 7.8, which meets the educational requirements for the job. In terms of experience, Arun has relevant experience as a Web Developer Intern, where he worked on projects involving AWS, GraphQL, ReactJS, and TailWindCSS. Additionally, he has worked on various projects using technologies like Java, JavaScript, Python, ReactJS, NodeJS, and machine learning. Arun's technical skills align well with the job description, as he has experience with tools like AWS, GitHub, Docker, and Jenkins, although experience with some specific tools mentioned in the job description like Oracle Policy Automation, Drools, Kafka, OpenShift, etc., is not directly mentioned in the resume. In terms of soft skills, Arun demonstrates problem-solving, project management, communication, teamwork, and critical thinking skills. He also holds certifications in Data Structures and Algorithms and Python Programming. Overall, the candidate shows a good match for the position but lacks some specific technical experience required, hence the rating of 7 out of 10.",
+      };
+      return result;
     } catch (err: unknown) {
       logger.error("api", "Error in summarizeResume", { error: err });
      throw new AppError(

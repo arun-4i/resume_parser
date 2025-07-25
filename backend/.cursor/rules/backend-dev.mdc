@@ -1,3 +1,10 @@
+---
+description: High-level overview of backend development for this project.
+globs:
+  - "**/*"
+alwaysApply: false
+---
+
 # Backend Development Overview
 
 This file provides a high-level overview of backend development for this project. For detailed standards, see the modular rule files referenced in .cursorrules.

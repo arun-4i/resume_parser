@@ -1,0 +1,35 @@
+---
+description: Development workflow standards covering PowerShell terminal requirements, Context7 MCP integration, and development process guidelines.
+globs:
+alwaysApply: false
+---
+
+# Workflow Rule
+
+## 1. Terminal Requirements
+
+- Always use PowerShell commands only in terminal
+- No Command Prompt commands allowed
+- Ensure cross-platform PowerShell compatibility
+
+## 2. Documentation Access
+
+- Always use Context7 MCP tool for official documentation
+- Access latest Next.js, React, and other tech documentation
+- Verify non-deprecated APIs and patterns
+
+## 3. Development Process
+
+- Start with .cursorrules for any new feature or refactor
+- Follow rule-specific guidelines for implementation
+- Update relevant rule files when patterns change
+
+## 4. Code Review
+
+- Reference appropriate rule files during review
+- Ensure compliance with all applicable standards
+- Update rules based on lessons learned
+
+- Reference appropriate rule files during review
+- Ensure compliance with all applicable standards
+- Update rules based on lessons learned

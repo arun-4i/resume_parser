@@ -1,0 +1,29 @@
+---
+description: Rendering strategy guidelines for Next.js pages covering SSR, ISR, CSR usage patterns and decision workflow with user approval requirements.
+globs: 
+alwaysApply: false
+---
+
+# Rendering Rule (SSR/ISR/CSR)
+
+## 1. SSR (Server-Side Rendering)
+
+- Use for pages with dynamic, user-specific, or frequently changing data.
+- Example: Authenticated dashboards, personalized feeds.
+
+## 2. ISR (Incremental Static Regeneration)
+
+- Use for mostly-static content that updates periodically.
+- Example: Marketing pages, blog posts.
+
+## 3. CSR (Client-Side Rendering)
+
+- Use for highly interactive, client-only features.
+- Example: Chat UIs, dashboards with heavy JS.
+
+## 4. Decision Workflow
+
+- AI suggests best rendering per page based on data needs and UX, user will review and take decision accordingly.
+- User has final call on rendering strategy.
+- Document rendering choice in page/component docstring.
+

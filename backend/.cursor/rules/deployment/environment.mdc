@@ -1,3 +1,10 @@
+---
+description: Environment configuration and .env structure standards for backend development.
+globs:
+  - "**/.env"
+alwaysApply: false
+---
+
 # Environment Configuration and .env Structure
 
 This file defines environment configuration and .env structure standards for backend development. For related deployment standards, see other files in the deployment folder.

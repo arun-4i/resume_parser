@@ -4,6 +4,7 @@ import { useState, useCallback, memo, useMemo } from "react";
 import { toast } from "sonner";
 import ResumeCompareForm from "./ResumeCompareForm";
 import ResumeCompareChat from "./ResumeCompareChat";
+import { UserInfoModal } from "@/components/shared/user-info-modal/UserInfoModal";
 
 // ==========================================
 // TYPE DEFINITIONS & MEMOIZED COMPONENTS
@@ -14,6 +15,15 @@ interface ResumeCompareState {
   isLoading: boolean;
   content: string | null;
   error: string | null;
+}
+
+interface ResumeCompareResultData {
+  content?: string;
+  resumeAnalysis?: {
+    content?: string;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
 }
 
 const MemoizedResumeCompareForm = memo(ResumeCompareForm);
@@ -45,11 +55,14 @@ export default function ResumeCompareClient() {
   }, []);
 
   const handleSubmitSuccess = useCallback(
-    (result: { success?: boolean; data?: { content?: string } }) => {
+    (result: { success?: boolean; data?: ResumeCompareResultData }) => {
+      // Support new API response structure
+      const content =
+        result.data?.resumeAnalysis?.content ?? result.data?.content ?? "";
       setState({
         isSubmitted: true,
         isLoading: false,
-        content: result.data?.content ?? "",
+        content,
         error: null,
       });
       toast.success("Resume analysis complete!");
@@ -104,12 +117,17 @@ export default function ResumeCompareClient() {
 
   return (
     <div className="relative h-screen flex flex-col">
+      {/* User Info Modal - blocks interaction until completed */}
+      <UserInfoModal />
+
       {/* Chat Content Area - Scrollable behind form */}
       <div className="flex-1 overflow-y-auto mb-2">
-        <div className="px-3 pt-6 pb-32 sm:px-4 sm:pt-8 md:px-6 lg:px-8">
+        <div className="px-3 pt-6 pb-44 sm:px-4 sm:pt-8 md:px-6 lg:px-8">
           {/* Chat content */}
           {state.isSubmitted && (
-            <div className="mb-14 w-full lg:max-w-4xl mx-auto">{chatComponent}</div>
+            <div className="mb-14 w-full lg:max-w-4xl mx-auto">
+              {chatComponent}
+            </div>
           )}
         </div>
       </div>
@@ -120,7 +138,7 @@ export default function ResumeCompareClient() {
         {/* <div className="h-8 bg-gradient-to-t from-background to-transparent"></div> */}
         {/* Solid form background */}
         {/* <div className="bg-background px-4 py-4"> */}
-          <div className="w-full max-w-2xl mx-auto">{formComponent}</div>
+        <div className="w-full max-w-2xl mx-auto">{formComponent}</div>
         {/* </div> */}
       </div>
 

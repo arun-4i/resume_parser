@@ -1,3 +1,9 @@
+---
+description: Logging and Audit Logging Standards
+globs:
+  alwaysApply: false
+---
+
 # Logging and Audit Logging Standards
 
 This file defines logging and audit logging standards for backend development. For related development standards, see other files in the development folder.

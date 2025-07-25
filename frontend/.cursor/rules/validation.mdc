@@ -1,0 +1,34 @@
+---
+description: Validation standards using Zod schemas for single source of truth between client and server, base schema patterns, input sanitization, and file upload validation.
+globs: 
+alwaysApply: false
+---
+
+# Validation Rule
+
+## 1. Shared Zod Schema
+
+- All validation must use a single Zod schema shared between client and server.
+- No duplicate validation logic. Types must be inferred from Zod.
+
+## 2. Base Schema Patterns
+
+- Use base schemas for text, email, date, number, and file.
+- Extend base schemas for feature-specific validation.
+
+## 3. Input Sanitization
+
+- All text inputs must be sanitized (see `.cursor/rules/security.mdc`).
+- No emojis or special characters in text field unless explicitly allowed.
+
+## 4. File Validation
+
+- File uploads must be validated for type, size, and security.
+
+## 5. Maintenance
+
+- Update schemas on business logic change. Review quarterly.
+
+## 5. Maintenance
+
+- Update schemas on business logic change. Review quarterly.

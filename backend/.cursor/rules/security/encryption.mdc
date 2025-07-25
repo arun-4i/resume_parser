@@ -1,3 +1,9 @@
+---
+description: Encryption standards for secure communication and data handling in backend development.
+globs:
+  alwaysApply: false
+---
+
 # Encryption Standards: AES+RSA and Key Management
 
 This file defines encryption standards for secure communication and data handling in backend development. For related security standards, see other files in the security folder.
@@ -38,8 +44,5 @@ const encryptedKey = crypto.publicEncrypt(rsaPublicKey, aesKey);
 - Follow industry standards (OWASP, NIST)
 - Document key rotation and encryption processes
 - Reference [rules/security/authentication.mdc] for JWT and RBAC
-  description:
-  globs:
-  alwaysApply: false
 
 ---

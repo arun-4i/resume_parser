@@ -1,3 +1,10 @@
+---
+description: Defines the project structure, file organization, and naming conventions for backend development.
+globs:
+  - "**/*"
+alwaysApply: false
+---
+
 # Project Structure, File Organization, and Naming
 
 This file defines the project structure, file organization, and naming conventions for backend development. For related standards, see other modular rule files referenced in .cursorrules.

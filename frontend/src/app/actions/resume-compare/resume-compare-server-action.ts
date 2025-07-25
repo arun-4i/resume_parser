@@ -1,61 +1,28 @@
 "use server";
 
 import { axiosInstance } from "@/api/axios";
-import { z } from "zod";
-
-// Server-side Zod schema for FormData validation
-// Note: Server receives File objects from FormData, not FileList from client
-const ResumeCompareSchema = z.object({
-  email: z
-    .string()
-    .min(1, "Email is required")
-    .email("Please enter a valid email address"),
-  resume: z
-    .instanceof(File)
-    .refine((file) => file.size > 0, "Please select a resume file")
-    .refine((file) => {
-      const allowedTypes = [
-        "application/pdf",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      ];
-      return allowedTypes.includes(file.type);
-    }, "Only PDF and DOCX files are allowed")
-    .refine((file) => {
-      const maxSize = 10 * 1024 * 1024; // 10MB limit
-      return file.size <= maxSize;
-    }, "File size must be less than 10MB"),
-  jobDescription: z
-    .string()
-    .min(1, "Job description is required")
-    .min(10, "Job description must be at least 10 characters")
-    .max(5000, "Job description must be less than 5000 characters"),
-});
-
-export type ResumeCompareFormData = z.infer<typeof ResumeCompareSchema>;
-
-export interface ResumeCompareResult {
-  success: boolean;
-  data?: {
-    email?: string;
-    rating?: string;
-    content?: string;
-  };
-  error?: string;
-}
+import {
+  ResumeCompareServerSchema,
+  type ResumeCompareResult,
+} from "@/lib/schemas";
 
 export async function resumeCompareServerAction(
   formData: FormData
 ): Promise<ResumeCompareResult> {
   try {
+    const firstName = formData.get("firstName") as string;
     const email = formData.get("email") as string;
+    const phone = formData.get("phone") as string;
     const resume = formData.get("resume") as File;
     const jobDescription = formData.get("jobDescription") as string;
 
-    // Validate input using Zod
-    const validationResult = ResumeCompareSchema.safeParse({
+    // Validate input using centralized Zod schema
+    const validationResult = ResumeCompareServerSchema.safeParse({
       email,
       resume,
       jobDescription,
+      phone,
+      firstName
     });
 
     if (!validationResult.success) {
@@ -68,11 +35,12 @@ export async function resumeCompareServerAction(
 
     // Prepare FormData for API call
     const apiFormData = new FormData();
+    apiFormData.append("firstName", firstName);
     apiFormData.append("email", email);
+    apiFormData.append("phone", phone);
     apiFormData.append("file", resume);
     apiFormData.append("jobDescription", jobDescription);
 
-    // console.log("FORMDATA: ", apiFormData);
     // Call the API endpoint
     const response = await axiosInstance.post("/resume/summary", apiFormData, {
       headers: {
@@ -80,7 +48,7 @@ export async function resumeCompareServerAction(
       },
     });
 
-    // console.log("RESPONSE: ", response.data);
+    console.log("response", response.data);
     return response.data;
   } catch (error) {
     console.error("Resume compare server action error:", error);

@@ -6,12 +6,6 @@ alwaysApply: false
 
 # Frontend Code Review Guidelines
 
-## Review Process
-
-- All code must be reviewed by at least one other team member (or AI) before merging.
-- Use pull requests for all changes.
-- Reviewer must check off the Bug-Prevention & Quality Checklist from .cursorrules.
-
 ## What to Check For
 
 - Code clarity, readability, and maintainability
@@ -68,7 +62,7 @@ alwaysApply: false
 
 - [ ] Components memoized appropriately (React.memo, useMemo, useCallback)
 - [ ] Framer Motion used for all UI transitions
-- [ ] Animations are fast (2-8ms for typing effects) and don't block input
+- [ ] Animations are fast (2-5ms for typing effects) and don't block input
 - [ ] No unnecessary re-renders
 
 ### Enhanced UI/Layout Implementation Validation (Updated 2025-01-11)

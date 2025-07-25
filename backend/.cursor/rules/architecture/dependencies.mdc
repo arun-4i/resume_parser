@@ -1,3 +1,11 @@
+---
+description: Defines import patterns, TypeScript configuration, and dependency management standards for backend development.
+globs:
+  - "**/*.ts"
+  - "**/*.tsx"
+alwaysApply: false
+---
+
 # Import Patterns, TypeScript Config, and Dependency Management
 
 This file defines import patterns, TypeScript configuration, and dependency management standards for backend development. For related standards, see other modular rule files referenced in .cursorrules.

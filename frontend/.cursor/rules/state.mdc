@@ -1,0 +1,29 @@
+---
+description: State management patterns covering URL state with nuqs, local React state, Zustand global state, memoization practices, and SSR/ISR hydration requirements.
+globs:
+alwaysApply: false
+---
+
+# State Management Rule
+
+## 1. URL State
+
+- Use nuqs for state that must persist in the URL (e.g., filters, search).
+
+## 2. Local State
+
+- Use React useState for transient UI state.
+
+## 3. Global State
+
+- Use Zustand for application-wide state shared across components.
+- Create focused stores for specific domains (auth, user preferences, etc.).
+- Avoid global state for UI-only state that doesn't need persistence.
+
+## 4. Memoization
+
+- Memoize derived state and expensive selectors.
+
+## 5. Hydration
+
+- Ensure server/client state sync for SSR/ISR pages.

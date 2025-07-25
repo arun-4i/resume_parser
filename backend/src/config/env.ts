@@ -11,6 +11,7 @@ export const config = {
 
   // Database
   DB_CONNECTION_STRING: process.env.DB_CONNECTION_STRING ?? "",
+  MONGO_CONNECTION_STRING: process.env.MONGO_CONNECTION_STRING ?? "",
 
   // JWT
   JWT_SECRET: process.env.JWT_SECRET ?? "",
@@ -39,6 +40,15 @@ export const config = {
   // OpenAI
   OPENAI_API_KEY: process.env.OPENAI_API_KEY ?? "",
   OPENAI_MODEL: process.env.OPENAI_MODEL ?? "gpt-3.5-turbo",
+
+  // External Quiz API
+  QUIZ_API_BASE_URL:
+    process.env.QUIZ_API_BASE_URL ??
+    "http://172.16.1.141/candidateonlinetest/api",
+  QUIZ_API_TIMEOUT: parseInt(process.env.QUIZ_API_TIMEOUT ?? "30000"),
+  EXTERNAL_API_RETRY_ATTEMPTS: parseInt(
+    process.env.EXTERNAL_API_RETRY_ATTEMPTS ?? "3"
+  ),
 };
 
 // Validate required environment variables

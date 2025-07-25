@@ -1,0 +1,31 @@
+---
+description: CSS layout standards covering z-index layering, scroll/overflow handling, textbox/border styling, and responsive layout testing incorporating ChatGPT UI lessons.
+globs:
+alwaysApply: false
+---
+
+# CSS/Layout/Scroll/Z-Index Rule
+
+## 1. Z-Index Layering
+
+- Explicitly set z-index for overlays, forms, and chat.
+- Use z-[1], z-[10], etc. for mobile/desktop conflicts.
+
+## 2. Scroll & Overflow
+
+- Prevent chat content from hiding behind forms.
+- Use padding/margin to ensure visibility.
+- Custom scrollbars for textarea where needed.
+
+## 3. Textbox & Borders
+
+- Remove unwanted borders for seamless backgrounds.
+- Use transparent/floating backgrounds for forms.
+
+## 4. Responsive Layout
+
+- Test all breakpoints for layout artifacts.
+
+## 4. Responsive Layout
+
+- Test all breakpoints for layout artifacts.

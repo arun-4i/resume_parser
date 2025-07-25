@@ -1,3 +1,9 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+
 # Backend Workflow, Planning, and Feedback Process
 
 This file defines the workflow for all backend development and refactoring tasks. For technical standards, see the modular rule files referenced in .cursorrules.
@@ -52,8 +58,5 @@ This file defines the workflow for all backend development and refactoring tasks
 
 - Main entry point: [.cursorrules]
 - Technical standards: see modular rule files referenced in .cursorrules
-  description:
-  globs:
-  alwaysApply: false
 
 ---

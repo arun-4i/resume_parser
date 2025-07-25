@@ -87,7 +87,7 @@ const register = asyncHandler(
 );
 
 const login = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     const { email, password } = req.body;
     if (!email || !password) {
       res.status(400).json({ error: "Email and password are required" });
@@ -113,6 +113,7 @@ const login = asyncHandler(
       jwtOptions
     );
     res.json({
+      success: true,
       message: "Login successful",
       token,
       user: {
@@ -126,7 +127,7 @@ const login = asyncHandler(
 );
 
 const getAllUsers = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     const users = await userService.getAllUsers();
     res.json({ success: true, data: users });
   }

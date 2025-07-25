@@ -316,3 +316,84 @@ Following .cursorrules standards with PowerShell commands, Context7 MCP integrat
 **Total Tasks:** 12 tasks across 6 phases  
 **Critical Path:** Phase 1 → Phase 2 → Phase 3 (3-4 days total)  
 **Success Criteria:** All bugs fixed, architecture scalable, performance optimized, security enhanced
+
+---
+
+## Appendix: ChatGPT-Style UI Bug Reports & Improvements
+
+Below is a consolidated record of every bug, fix, and workflow improvement that emerged during the ChatGPT-style UI implementation. Use these findings to inform future development, testing, and review processes.
+
+### 1. Critical Bugs Discovered in Initial Testing
+
+1. **Text Overflow Issue** – Word wrap failed, breaking layout
+2. **Form Positioning** – Form needed fixed bottom placement with 4 px padding
+3. **Unwanted Border** – Border between form and chat undesired
+4. **Over-Animation** – Excessive form animations
+5. **Chat Positioning** – Chat needed bottom-center alignment
+6. **Input Component** – Required simple `<textarea>` (not floating label)
+7. **Textarea Height** – Fixed height of 150 px necessary
+8. **Scrolling** – Needed custom scrollbar inside textarea
+
+_Immediate Fix Plan executed: Tasks 1-6 implemented and verified._
+
+### 2. Phase 2 Bug Fixes (File Validation & Badge Sizing)
+
+1. **Form Validation Issue** – Resume file attached but error persisted ➜ real-time validation, `form.clearErrors()` on change.
+2. **File Badge Size** – Badge too large ➜ compact styling (`px-2 py-1 text-xs`, smaller icons, max filename width 150 px).
+
+_Status: Completed._
+
+### 3. Phase 3 Bug Fixes (State & Submit Logic)
+
+1. **File Disappears on Text Change** – Controlled `value=""` removed from `<input type="file">`.
+2. **Submit Button Non-functional** – Validation logic corrected (≥ 10 characters) and error handling added.
+3. **File Persistence Across Edits** – File now maintained through text changes; badge updates reliably.
+
+_Status: Completed._
+
+### 4. Phase 4 UI Polish
+
+1. **Desktop Form Background** – Black background removed; form now transparent/floating.
+2. **Form Transparency on Submit** – Opacity transition added during submission.
+3. **Reset Button Position** – Moved to top-right of textarea via absolute positioning.
+4. **Chat Scroll Issues** – Increased bottom padding, auto-scroll on new messages, adjusted intersection observer margin.
+
+_Status: Completed._
+
+### 5. Phase 5 Final Layout Fixes
+
+1. **Button Layout Misalignment** – Adopted simple flex: plus & reset left, send right.
+2. **Form Structure Reorganisation** – Three-section layout (reset strip, textarea, button strip) with seamless backgrounds.
+3. **Border Visibility Issues** – Removed textarea borders for clean blend.
+4. **Mobile Z-index Conflicts** – Explicit `z-[1]` / `z-[10]` layering.
+5. **Desktop Line Artifacts** – Eliminated stray border-right classes.
+
+_Status: Completed – Production-ready UI._
+
+### 6. Workflow Improvement Analysis
+
+**Common Issue Patterns Identified**
+
+- _Layout Specification Gaps_ – Need precise positioning requirements up front.
+- _Responsive Design Conflicts_ – Desktop fixes sometimes break mobile; test both continuously.
+- _Visual Integration Problems_ – Ensure components blend with parent backgrounds.
+- _State Management Edge Cases_ – Validate persistence of files & inputs across renders.
+- _Animation Timing Conflicts_ – Limit to essential animations.
+
+**Improved Questioning Strategy**
+
+Before implementing UI work, explicitly ask:
+
+1. Exact button/layout positions (left/center/right)
+2. Intended appearance on mobile vs desktop
+3. Desired background & border integration
+4. Expectations for state persistence/clearance
+5. Preferred animations (if any)
+
+**Recommended Workflow Changes**
+
+1. **Phase 1 – Requirements Clarification**: Capture detailed layout, responsiveness, visual integration, and state expectations.
+2. **Phase 2 – Implementation**: Continuously validate mobile/desktop, visual consistency, and edge-case states.
+3. **Phase 3 – User Testing**: Iterate quickly on visual feedback; document concrete changes.
+
+_These lessons should be applied to all future UI and architectural work to minimise re-work and accelerate delivery._
